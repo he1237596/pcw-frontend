@@ -1,0 +1,13 @@
+
+html {
+  /* background-color: #252A32; */
+  min-width: 1280px;
+}
+* {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+h3 {
+  padding-bottom: 8px;
+}
