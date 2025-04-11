@@ -8,12 +8,20 @@ import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom'
 import PermissionButton from '@components/PermissionButton'
-
+// import { useEditableTable } from '../hooks'
+// import {EditableTable, EditableTableColumn} from '@/components/temp/EditableCell'
 // import { ConfigProvider } from 'antd';
 
 // const { getPrefixCls } = ConfigProvider;
 // const antCls = getPrefixCls(); // 获取 Ant Design 组件前缀
-
+interface Project {
+  id: string | number;
+  name: string;
+  description: string;
+  createdAt: Date;
+  dataIndex: keyof Project;
+  [key: string]: any;
+}
 const useStyle = createStyles(({ css, token }) => {
   const antCls = '.ant';
   // scrollbar-color: #eaeaea transparent;
