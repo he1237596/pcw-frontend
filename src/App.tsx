@@ -14,6 +14,8 @@ import { HashRouter as Router, useRoutes } from 'react-router-dom';
 import { routes } from './router';
 import { getCurrentLang } from './antdLocales'
 import Tips, { message } from '@/components/Tips'
+import { PermissionProvider } from './context/PermissionContext'
+
 const AppRoutes = () => {
   return useRoutes(routes);
 };
@@ -63,6 +65,7 @@ const Index: React.FC = () => {
   }), [])
   return (
     <ConfigProvider theme={themeData} locale={getCurrentLang(currentLang)}>
+      <PermissionProvider>
       {/* <div>
         语言切换：
         <Space>
@@ -86,6 +89,7 @@ const Index: React.FC = () => {
       <App message={{ maxCount: 1 }} notification={{ placement: 'bottomRight' }}>
         <Tips />
       </App>
+      </PermissionProvider>
     </ConfigProvider>
   );
 };

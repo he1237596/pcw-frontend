@@ -38,13 +38,18 @@ export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children
   useEffect(() => {
     // 获取用户权限
     getUserInfo().then((res) => {
-      setPermissions([
-        {
-          // id: res.data.id,
-          code: res.data.roleCode,
-          name: res.data.roleName
-        }
-      ]);
+      if (res.code === 200) {
+        setPermissions([
+          {
+            // id: res.data.id,
+            code: res.data.roleCode,
+            name: res.data.roleName
+          }
+        ]);
+      }
+      setLoading(false); // 设置加载状态为false
+    }).catch((error) => {
+      console.error('Error fetching user permissions:', error);
       setLoading(false); // 设置加载状态为false
     })
   }, []);

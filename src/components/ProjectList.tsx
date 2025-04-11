@@ -7,6 +7,8 @@ import ProjectForm from './ProjectForm';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom'
+import PermissionButton from '@components/PermissionButton'
+
 // import { ConfigProvider } from 'antd';
 
 // const { getPrefixCls } = ConfigProvider;
@@ -123,9 +125,9 @@ const ProjectList: React.FC = () => {
             <Button size='small' onClick={() => handleExport(record.id, record.name)}>
               导出
             </Button>
-            <Button size='small' disabled danger onClick={() => handleDelete(record.id)}>
+            <PermissionButton permission='admin' size='small' danger onClick={() => handleDelete(record.id)}>
               删除
-            </Button>
+            </PermissionButton>
           </Space>
         </>
       ),

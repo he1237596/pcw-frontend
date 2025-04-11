@@ -4,7 +4,8 @@ import { Button, Checkbox, Form, Input, Card, Col, Flex, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { login } from '../../api/user';
+import { getUserInfo, login } from '@api/user';
+import { useUserStore } from '../../store/userUserStore'
 type FieldType = {
   username?: string;
   password?: string;
@@ -106,7 +107,7 @@ const Logo: React.FC = () => {
 
 const App: React.FC = () => {
   const navigate = useNavigate();
-
+  const setUser = useUserStore((state) => state.setUser)
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
     const { username = '', password = '', remember } = values;
@@ -125,7 +126,15 @@ const App: React.FC = () => {
     if (res.code === 200) {
       message.success('登录成功');
       localStorage.setItem('token', res.data.token);
-      navigate('/projects');
+      getUserInfo().then((res) => {
+        if (res.code === 200) {
+          // setUserInfo(res.data);
+          setUser(res.data)
+          console.log(res.data, 9999999999999)
+          navigate('/projects');
+        }
+      });
+      
     }
   };
 

@@ -8,6 +8,8 @@ import { getProjects } from '../api/projects';
 import { createStyles } from 'antd-style';
 import type { TableColumnsType } from 'antd';
 import dayjs from 'dayjs';
+import { useUserStore } from '../store/userUserStore'
+import PermissionButton from '@components/PermissionButton'
 interface DataType {
   key: React.Key;
   name: string;
@@ -51,6 +53,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   const [formData, setFormData ] = useState({ projectId: -1, key: 'zh-cn', value: '' });
   const location = useLocation();
   const { styles } = useStyle();
+  // const user = useUserStore(state => state.user);
   const fetchKeys = async (page: number, limit: number) => {
     setLoading(true);
     try {
@@ -294,9 +297,9 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
           <Button size="small" onClick={() => handleEdit(record)}>
             编辑
           </Button>
-          <Button disabled size="small" danger onClick={() => handleDelete(record.id)}>
+          <PermissionButton permission='admin' size="small" danger onClick={() => handleDelete(record.id)}>
             删除
-          </Button>
+          </PermissionButton>
         </Space>
       ),
     },
