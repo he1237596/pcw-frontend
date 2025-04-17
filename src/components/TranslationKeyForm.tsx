@@ -109,7 +109,7 @@ const TranslationKeyForm = ({ projectId, translationKey, onSuccess, projectList 
   }
   console.log(initialValues, 'initialValues')
   return (
-    <Form form={form} initialValues={initialValues} onFinish={handleSubmit} clearOnDestroy>
+    <Form size='small' form={form} initialValues={initialValues} onFinish={handleSubmit} clearOnDestroy>
       <Form.Item label="项目名称">
         {projectName}
       </Form.Item>
@@ -117,28 +117,28 @@ const TranslationKeyForm = ({ projectId, translationKey, onSuccess, projectList 
         <Input />
       </Form.Item>
       <Form.Item name="en-US" label="en-US" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="zh-CN" label="zh-CN" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="zh-Hant" label="zh-Hant" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="es" label="es" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="fr" label="fr" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="it" label="it" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="ja" label="ja" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="kr" label="kr" rules={[{ required: false }]}>
-        <Input />
+        <Input.TextArea />
       </Form.Item>
       <Form.Item name="description" label="Description">
         <Input.TextArea />

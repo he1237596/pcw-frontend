@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import axios from 'axios';
 import { getUserInfo } from '@/api/user';
 
@@ -14,6 +14,7 @@ interface Permission {
 interface PermissionContextType {
   permissions: Permission[]; // 权限列表
   loading: boolean; // 权限加载状态
+  checkHasRole: (roleCode: string) => boolean; // 检查是否有某个角色的权限
 }
 
 // 创建上下文并提供默认值
@@ -34,7 +35,6 @@ interface PermissionProviderProps {
 export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children }) => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // 添加loading状态
-
   useEffect(() => {
     // 获取用户权限
     getUserInfo().then((res) => {
@@ -54,8 +54,12 @@ export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children
     })
   }, []);
 
+  const checkHasRole = useCallback((roleCode: string) => {
+    return permissions.some(p => p.code === 'Sadmin' || p.code === roleCode);
+  }, [permissions])
+
   return (
-    <PermissionContext.Provider value={{ permissions, loading }}>
+    <PermissionContext.Provider value={{ permissions, loading, checkHasRole }}>
       {children}
     </PermissionContext.Provider>
   );

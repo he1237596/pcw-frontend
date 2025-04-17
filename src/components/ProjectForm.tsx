@@ -24,7 +24,7 @@ const ProjectForm = ({ project, onSuccess }: any) => {
   };
 
   return (
-    <Form form={form} initialValues={project} onFinish={handleSubmit}>
+    <Form size='small' form={form} initialValues={project} onFinish={handleSubmit}>
       <Form.Item name="name" label="Name" rules={[{ required: true }]}>
         <Input />
       </Form.Item>
