@@ -108,7 +108,6 @@ const App: React.FC = () => {
   const navigate = useNavigate();
 
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-    console.log('Success:', values);
     const { username = '', password = '', email = '' } = values;
 
     const params = {

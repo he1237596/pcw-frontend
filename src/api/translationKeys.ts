@@ -1,9 +1,9 @@
 // import apiClient from "./index";
 import { request as apiClient } from "@/utils";
 
-export const getProjectKeys = async (projectId: number, page: number, limit: number) => {
+export const getProjectKeys = async (projectId: number, paginate: { current: number; pageSize: number }, filter: any) => {
   try {
-    const response = await apiClient.get(`/projects/${projectId}/keys`, { page, limit });
+    const response = await apiClient.get(`/projects/${projectId}/keys`, { limit: paginate.pageSize, page: paginate.current, filter: JSON.stringify(filter) });
     return response;
   } catch (error) {
     console.error("Error fetching project keys: ", error);

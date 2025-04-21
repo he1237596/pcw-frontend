@@ -1,7 +1,22 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Table, Button, message, Modal, Select, Space, Flex, Form, Popconfirm, Input } from 'antd';
+import {
+  Table,
+  Button,
+  message,
+  Modal,
+  Select,
+  Space,
+  Flex,
+  Form,
+  Popconfirm,
+  Input,
+} from 'antd';
 import type { GetRef, InputRef, TableProps } from 'antd';
-import { getProjectKeys, deleteTranslationKey, updateTranslationKeyByLangId } from '../api/translationKeys';
+import {
+  getProjectKeys,
+  deleteTranslationKey,
+  updateTranslationKeyByLangId,
+} from '../api/translationKeys';
 import TranslationKeyForm from './TranslationKeyForm';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
@@ -9,8 +24,9 @@ import { getProjects } from '../api/projects';
 import { createStyles } from 'antd-style';
 import type { TableColumnsType } from 'antd';
 import dayjs from 'dayjs';
-import { useUserStore } from '../store/userUserStore'
-import PermissionButton from '@components/PermissionButton'
+import { useUserStore } from '../store/userUserStore';
+import PermissionButton from '@components/PermissionButton';
+import SearchForm from '@components/table/SearchForm';
 interface DataType {
   key: React.Key;
   name: string;
@@ -75,21 +91,26 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
 
   const toggleEdit = () => {
     setEditing(!editing);
-    console.log('toggleEdit', dataIndex, record)
-    const index = record.translations.findIndex((item: any)=>item.language === dataIndex)
-    form.setFieldsValue({ [dataIndex]: record.translations[index].value });
+    console.log('toggleEdit', dataIndex, record);
+    const item = record.translations.find(
+      (item: any) => item.language === dataIndex,
+    );
+    form.setFieldsValue({ [dataIndex]:  item?.value });
   };
 
   const save = async () => {
     try {
       const values = await form.validateFields();
-      console.log(values, {...values}, 123, dataIndex)
-      const [ lngObj ]= Object.entries(values);
-      console.log(lngObj)
+      const [lngObj] = Object.entries(values);
       const newTrasallations = [...record.translations];
-      const index = newTrasallations.findIndex((item: any)=>item.language === lngObj[0])
-      const newLngInfo = { ...newTrasallations[index], value: values[dataIndex] }
-      newTrasallations.splice(index, 1, newLngInfo)
+      const index = newTrasallations.findIndex(
+        (item: any) => item.language === lngObj[0],
+      );
+      const newLngInfo = {
+        ...newTrasallations[index],
+        value: values[dataIndex],
+      };
+      newTrasallations.splice(index, 1, newLngInfo);
       toggleEdit();
       handleSave({ ...record, translations: newTrasallations }, newLngInfo);
     } catch (errInfo) {
@@ -106,13 +127,14 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
         name={dataIndex}
         rules={[{ required: true, message: `${title} is required.` }]}
       >
-        <Input ref={inputRef} 
-          onPressEnter={save} 
+        <Input
+          ref={inputRef}
+          onPressEnter={save}
           onKeyDown={(e) => {
-            e.key === 'Escape' && setEditing(false)
+            e.key === 'Escape' && setEditing(false);
           }}
           onBlur={(e) => {
-            setEditing(false)
+            setEditing(false);
           }}
         />
       </Form.Item>
@@ -142,44 +164,118 @@ const useStyle = createStyles(({ css, token }) => {
             scrollbar-width: thin;
             scrollbar-gutter: stable;
           }
-          ${antCls}-table-body{
-            height: calc(100vh - 360px)
+          ${antCls}-table-body {
+            height: calc(100vh - 360px);
           }
         }
       }
-    `
+    `,
   };
 });
-const renderCell = (text: any, record: any, dataIndex: string) => (
+const renderCell = (text: any, record: any, dataIndex: string) =>
   record?.translations?.find(
     (item: { language: string }) => item.language === dataIndex,
-  )?.value || "待补充翻译"
-);
+  )?.value || '待补充翻译';
 interface PaginationParams {
-  current: number
-  pageSize: number
+  current: number;
+  pageSize: number;
 }
 const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   const [keys, setKeys] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   // const [currentPage, setCurrentPage] = useState(1);
   // const [pageSize, setPageSize] = useState(20);
-  const [pagination, setPagination] = useState<PaginationParams>({ current: 1, pageSize: 10 })
+  const [pagination, setPagination] = useState<PaginationParams>({
+    current: 1,
+    pageSize: 10,
+  });
   const [total, setTotal] = useState(0);
   const [editingKey, setEditingKey] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [projectList, setProjectList] = useState<{ label: string; value: number }[]>([]);
+  const [projectList, setProjectList] = useState<
+    { label: string; value: number }[]
+  >([]);
   const [projectId, setProjectId] = useState(-1);
-  const [formData, setFormData ] = useState({ projectId: -1, key: 'zh-cn', value: '' });
+  // const [formData, setFormData] = useState({
+  //   projectId: -1,
+  //   key: 'zh-cn',
+  //   value: '',
+  // });
   const location = useLocation();
   const { styles } = useStyle();
-  const [form] = Form.useForm()
+  const [form] = Form.useForm();
+  const formItems = [
+    {
+      name: 'projectId',
+      label: '项目名称',
+      type: 'select' as const,
+      options: projectList,
+      rules: [{ required: true, message: 'Please select a project' }],
+      readOnly: true,
+    },
+    {
+      name: 'keyName',
+      label: 'keyName',
+      type: 'input' as const,
+    },
+    {
+      name: 'language',
+      label: '语言',
+      type: 'select' as const,
+      options: [
+        {
+          'value': 'en-US',
+          'label': 'English',
+        },
+        {
+          'value': 'zh-CN',
+          'label': '中文',
+        },
+        {
+          'value': 'zh-Hant',
+          'label': '繁体',
+        },
+        {
+          'value': 'es',
+          'label': 'Spanish',
+        },
+        {
+          'value': 'fr',
+          'label': 'French',
+        },
+        {
+          'value': 'it',
+          'label': 'Italian',
+        },
+        {
+          'value': 'ja',
+          'label': 'Japanese',
+        },
+        {
+          'value': 'kr',
+          'label': 'Korean',
+        },
+      ],
+      rules: [{ required: true, message: 'Please select a project' }],
+    },
+    {
+      name: 'value',
+      label: '关键字',
+      type: 'input' as const,
+    },
+  ];
   // const user = useUserStore(state => state.user);
   const fetchKeys = async (pagination: PaginationParams) => {
     setLoading(true);
+    const search = form.getFieldsValue();
+    const { projectId: _projectId, keyName, language, value } = search;
+    // console.log(search, 'search', projectId, _projectId)
+    if (projectId < 0) {
+      return;
+    }
     try {
-      const res = await getProjectKeys(projectId, pagination.current, pagination.pageSize);
-      const {code, data} = res;
+      const res = await getProjectKeys(_projectId, pagination, {keyName, language, value});
+      const { code, data } = res;
       if (code === 200) {
         setKeys(data.rows);
         setTotal(data.count);
@@ -209,9 +305,11 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
         );
         if (projectId > 0) {
           setProjectId(projectId);
-        } else{
+
+        } else {
           setProjectId(data.rows[0].id);
         }
+        fetchKeys(pagination);
       } catch (error) {
         // message.error("Failed to load projects");
       } finally {
@@ -222,11 +320,14 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   }, []);
 
   useEffect(() => {
-    if (projectId < 0) {
-      return;
-    }
+    // if (projectId < 0) {
+    //   return;
+    // }
+    // form.setFieldsValue({
+    //   projectId,
+    // });
     fetchKeys(pagination);
-  }, [projectId, pagination]);
+  }, [pagination, projectId]);
 
   const handleDelete = async (keyId: number) => {
     try {
@@ -244,7 +345,10 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     // setCurrentPage(pagination.current);
     // setPageSize(pagination.pageSize);
     // fetchKeys(pagination.current, pagination.pageSize);
-    setPagination({ current: pagination.current, pageSize: pagination.pageSize })
+    setPagination({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
   };
 
   const handleEdit = (key: any) => {
@@ -378,7 +482,12 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
           <Button size="small" onClick={() => handleEdit(record)}>
             编辑
           </Button>
-          <PermissionButton permission='admin' size="small" danger onClick={() => handleDelete(record.id)}>
+          <PermissionButton
+            permission="admin"
+            size="small"
+            danger
+            onClick={() => handleDelete(record.id)}
+          >
             删除
           </PermissionButton>
         </Space>
@@ -403,58 +512,44 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   const handleSave = async (row: DataType, lngInfo: any) => {
     const newData = [...keys];
     const index = newData.findIndex((item) => row.id === (item as any).id);
-    const item = newData[index]
+    const item = newData[index];
     const newItem = {
       ...item,
       ...row,
-    }
+    };
     newData.splice(index, 1, newItem);
     setKeys(newData);
     // 同步到远程
     try {
-      const res = await updateTranslationKeyByLangId(lngInfo.id, lngInfo)
-      if(res.code === 200) {
-        message.success('保存成功')
+      const res = await updateTranslationKeyByLangId(lngInfo.id, lngInfo);
+      if (res.code === 200) {
+        message.success('保存成功');
       }
     } catch (error) {
       // message.error('保存成功')
     }
   };
 
-  const onChange = (value: number) => {
-    setProjectId(value);
+  const handleSearch = () => {
+    setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
-  const onSearch = (value: string) => {
-    console.log('search:', value);
+  const handleReset = () => {
+    form.resetFields();
+    setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
-  const handleSelect = (key: string, value: string) => {
-    console.log(`selected ${value}`);
-    setFormData({ ...formData, key: value });
-  }
-  // const handleSearch = () => {
-  //   setPagination(prev => ({ ...prev, current: 1 }))
-  //   fetchData()
-  // }
-
-  // const handleReset = () => {
-  //   form.resetFields()
-  //   setPagination(prev => ({ ...prev, current: 1 }))
-  //   fetchData()
-  // }
-  console.log(keys)
   return (
     <>
       <Flex justify="space-between" style={{ flexShrink: 0, paddingBottom: 8 }}>
-        <Space>
+        {/* <Space>
           <span>项目:</span>
           <Select
-            showSearch
+            // showSearch
             placeholder="Select a project"
-            optionFilterProp="label"
+            // optionFilterProp="label"
             onChange={onChange}
-            onSearch={onSearch}
+            // onSearch={onSearch}
             options={projectList}
             value={projectId}
             size="middle"
@@ -469,16 +564,16 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
           >
             新增
           </Button>
-        </Space>
-        {/* <div style={{ marginBottom: 16 }}>
-          <SearchForm
-            form={form}
-            items={formItems}
-            onSearch={handleSearch}
-            onReset={handleReset}
-          />
-          {extraButtons && <div style={{ marginTop: 8 }}>{extraButtons}</div>}
-        </div> */}
+        </Space> */}
+        <SearchForm
+          form={form}
+          items={formItems}
+          onSearch={handleSearch}
+          onReset={handleReset}
+          initialValues={{
+            projectId: projectId,
+          }}
+        />
       </Flex>
       <div style={{ flex: 1, minHeight: 0 }}>
         <div

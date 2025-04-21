@@ -107,7 +107,7 @@ const TranslationKeyForm = ({ projectId, translationKey, onSuccess, projectList 
       initialValues[element.language] = element.value
     }
   }
-  console.log(initialValues, 'initialValues')
+
   return (
     <Form size='small' form={form} initialValues={initialValues} onFinish={handleSubmit} clearOnDestroy>
       <Form.Item label="项目名称">

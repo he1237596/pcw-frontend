@@ -19,7 +19,7 @@ module.exports = {
       config: [__filename],
     },
   },
-  devtool: 'inline-source-map',
+  devtool: 'source-map',
   devServer: {
     static: {
       directory: path.join(__dirname, '../dist'), // 新的配置

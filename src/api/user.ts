@@ -9,7 +9,6 @@ interface UserInfo {
 export const getUserInfo = async () => {
   try {
     const response = await apiClient.get(`/user/current`);
-    console.log(response, 9999)
     return response;
   } catch (error) {
     console.error("Error fetching getUserInfo: ", error);
@@ -51,9 +50,6 @@ export const logout = async () => {
 export const login = async (params: { username: string; password: string; }) => {
   try {
     const response = await apiClient.post<{ token: string }>(`/user/login`, params);
-    // console.log(response.code, 9999)
-    // const { code } = response;
-    // console.log(code)
     return response;
   } catch (error) {
     console.error("Error login: ", error);
@@ -63,9 +59,6 @@ export const login = async (params: { username: string; password: string; }) => 
 export const register = async (params: { username: string; password: string; }) => {
   try {
     const response = await apiClient.post(`/user/register`, params);
-    // console.log(response.code, 9999)
-    // const { code } = response;
-    // console.log(code)
     return response;
   } catch (error) {
     console.error("Error login: ", error);

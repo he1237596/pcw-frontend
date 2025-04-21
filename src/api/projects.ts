@@ -4,7 +4,6 @@ import { request as apiClient } from "@/utils";
 export const getProjects = async (page: number, limit: number) => {
   try {
     const response = await apiClient.get(`/projects`, { page, limit });
-    console.log(response.data, 9999)
     return response.data;
   } catch (error) {
     console.error("Error fetching projects: ", error);
@@ -19,7 +18,6 @@ export const exportProjects = (id: string|number, filename?: string ) => {
 export const createProject = async (project: { name: string; description: string; }) => {
   try {
     const response = await apiClient.post(`/projects`, project);
-    console.log(response.data, 9999)
     return response.data;
   } catch (error) {
     console.error("Error creating project: ", error);

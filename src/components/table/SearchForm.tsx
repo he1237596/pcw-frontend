@@ -12,6 +12,7 @@ export interface SearchFormItem {
   readOnly?: boolean
   disabled?: boolean
   rules?: any[]
+  allowClear?: boolean
   [key: string]: any // 其他属性
 }
 
@@ -46,13 +47,13 @@ const SearchForm = forwardRef<SearchFormRef, SearchFormProps>(({ form, items, on
   return (
     <div ref={wrapperRef}>
       <Form form={form} initialValues={initialValues} layout="inline" onFinish={onSearch}>
-        {items.map(({ name, label, type, placeholder, options, readOnly, disabled }) => (
+        {items.map(({ name, label, type, placeholder, options, readOnly = false, disabled = false, allowClear = true }) => (
           <Form.Item key={name} name={name} label={label} style={{ minWidth: 160 }}>
             {type === 'input' ? (
-              <Input placeholder={placeholder} readOnly={readOnly} disabled={disabled} />
+              <Input placeholder={placeholder} readOnly={readOnly} disabled={disabled} allowClear={allowClear} />
             ) : (
-              readOnly?<Select placeholder={placeholder} options={options} open={!readOnly} onClick={(e) => e.preventDefault()} disabled ={disabled} />:
-              <Select placeholder={placeholder} options={options} disabled ={disabled} />
+              readOnly?<Select placeholder={placeholder} options={options} open={!readOnly} onClick={(e) => e.preventDefault()} />:
+              <Select placeholder={placeholder} options={options} disabled ={disabled} allowClear={allowClear} />
             )}
           </Form.Item>
         ))}

@@ -122,7 +122,6 @@ const App: React.FC = () => {
     };
     // console.log(md5(password), params)
     const res = await login(params);
-    console.log(res, 8888);
     if (res.code === 200) {
       message.success('登录成功');
       localStorage.setItem('token', res.data.token);
@@ -130,7 +129,6 @@ const App: React.FC = () => {
         if (res.code === 200) {
           // setUserInfo(res.data);
           setUser(res.data)
-          console.log(res.data, 9999999999999)
           navigate('/projects');
         }
       });

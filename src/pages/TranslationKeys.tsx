@@ -29,7 +29,6 @@ const useStyle = createStyles(({ css, token }) => {
   };
 });
 const TranslationKeysPage: React.FC = (props: any) => {
-  console.log(props)
   const { styles } = useStyle()
   // const { projectId } = match.params;
   // const { projectId } = useParams<{ projectId: string }>();

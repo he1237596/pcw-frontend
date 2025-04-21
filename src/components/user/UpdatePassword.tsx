@@ -47,32 +47,6 @@ const UserInfo: React.FC = () => {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  // const [formData, setFormData] = useState<FieldType>({
-  //   oldPassword: '',
-  //   confirm: '',
-  //   password: ''
-  // });
-  // const [loading, setLoading] = useState(false);
-
-  // const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-  //   console.log('Success:', values);
-  //   const { oldPassword = '', password = '' } = values;
-  //   const params = {
-  //     password: SHA256(password).toString(),
-  //     oldPassword: SHA256(oldPassword).toString(),
-  //   };
-  //   // console.log(md5(password), params)
-  //   const res = await updatePassword(params);
-  //   if (res.code === 200) {
-
-  //   }
-  // };
-
-  // const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (
-  //   errorInfo,
-  // ) => {
-  //   console.log('Failed:', errorInfo);
-  // };
 
   const showModal = () => {
     setOpen(true);
