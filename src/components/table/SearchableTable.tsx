@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Form } from 'antd'
-import SearchForm, { SearchFormItem } from './SearchForm'
+import SearchForm, { SearchFormItem, SearchFormRef } from './SearchForm'
 import PaginatedTable from './PaginatedTable'
 
 interface PaginationParams {
@@ -33,7 +33,7 @@ function SearchableTable<T extends object>({
   const [pagination, setPagination] = useState<PaginationParams>({ current: 1, pageSize: 10 })
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-  const formRef = useRef<HTMLDivElement>(null)
+  const formRef = useRef<SearchFormRef>(null)
   const fetchData = async () => {
     setLoading(true)
     const search = form.getFieldsValue()
@@ -42,12 +42,12 @@ function SearchableTable<T extends object>({
     setTotal(res.count)
     setLoading(false)
   }
-  // useEffect(() => {
-  //   if (formRef.current) {
-  //     const height = formRef.current.offsetHeight
-  //     console.log('SearchForm 高度:', height)
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (formRef.current) {
+      const height = formRef.current.getHeight()
+      console.log('SearchForm 高度:', height)
+    }
+  }, [])
   useEffect(() => {
     fetchData()
   }, [pagination])
@@ -71,6 +71,7 @@ function SearchableTable<T extends object>({
           items={formItems}
           onSearch={handleSearch}
           onReset={handleReset}
+          ref={formRef}
         />
         {extraButtons && <div style={{ marginTop: 8 }}>{extraButtons}</div>}
       </div>
