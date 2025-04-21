@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, message, Modal, Select, Space, Flex, Input } from 'antd';
-import { getProjectKeys, deleteTranslationKey } from '../api/translationKeys';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Table, Button, message, Modal, Select, Space, Flex, Form, Popconfirm, Input } from 'antd';
+import type { GetRef, InputRef, TableProps } from 'antd';
+import { getProjectKeys, deleteTranslationKey, updateTranslationKeyByLangId } from '../api/translationKeys';
 import TranslationKeyForm from './TranslationKeyForm';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
@@ -20,6 +21,115 @@ interface DataType {
 interface TranslationKeyListProps {
   // projectId: number;
 }
+
+type FormInstance<T> = GetRef<typeof Form<T>>;
+
+const EditableContext = React.createContext<FormInstance<any> | null>(null);
+
+interface Item {
+  key: string;
+  id: string | number;
+  [key: string]: any;
+}
+
+interface EditableRowProps {
+  index: number;
+}
+
+const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
+  const [form] = Form.useForm();
+  return (
+    <Form form={form} component={false}>
+      <EditableContext.Provider value={form}>
+        <tr {...props} />
+      </EditableContext.Provider>
+    </Form>
+  );
+};
+interface EditableCellProps {
+  title: React.ReactNode;
+  editable: boolean;
+  dataIndex: keyof Item;
+  record: Item;
+  handleSave: (record: Item, item?: any) => void;
+}
+
+const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
+  title,
+  editable,
+  children,
+  dataIndex,
+  record,
+  handleSave,
+  ...restProps
+}) => {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef<InputRef>(null);
+  const form = useContext(EditableContext)!;
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+    }
+  }, [editing]);
+
+  const toggleEdit = () => {
+    setEditing(!editing);
+    console.log('toggleEdit', dataIndex, record)
+    const index = record.translations.findIndex((item: any)=>item.language === dataIndex)
+    form.setFieldsValue({ [dataIndex]: record.translations[index].value });
+  };
+
+  const save = async () => {
+    try {
+      const values = await form.validateFields();
+      console.log(values, {...values}, 123, dataIndex)
+      const [ lngObj ]= Object.entries(values);
+      console.log(lngObj)
+      const newTrasallations = [...record.translations];
+      const index = newTrasallations.findIndex((item: any)=>item.language === lngObj[0])
+      const newLngInfo = { ...newTrasallations[index], value: values[dataIndex] }
+      newTrasallations.splice(index, 1, newLngInfo)
+      toggleEdit();
+      handleSave({ ...record, translations: newTrasallations }, newLngInfo);
+    } catch (errInfo) {
+      console.log('Save failed:', errInfo);
+    }
+  };
+
+  let childNode = children;
+
+  if (editable) {
+    childNode = editing ? (
+      <Form.Item
+        style={{ margin: 0 }}
+        name={dataIndex}
+        rules={[{ required: true, message: `${title} is required.` }]}
+      >
+        <Input ref={inputRef} 
+          onPressEnter={save} 
+          onKeyDown={(e) => {
+            e.key === 'Escape' && setEditing(false)
+          }}
+          onBlur={(e) => {
+            setEditing(false)
+          }}
+        />
+      </Form.Item>
+    ) : (
+      <div
+        className="editable-cell-value-wrap"
+        style={{ paddingInlineEnd: 24 }}
+        onClick={toggleEdit}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  return <td {...restProps}>{childNode}</td>;
+};
+
 const useStyle = createStyles(({ css, token }) => {
   const antCls = '.ant';
   // scrollbar-color: #eaeaea transparent;
@@ -40,15 +150,20 @@ const useStyle = createStyles(({ css, token }) => {
     `
   };
 });
+const renderCell = (text: any, record: any, dataIndex: string) => (
+  record?.translations?.find(
+    (item: { language: string }) => item.language === dataIndex,
+  )?.value || "待补充翻译"
+);
 const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
-  const [keys, setKeys] = useState([]);
+  const [keys, setKeys] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [total, setTotal] = useState(0);
   const [editingKey, setEditingKey] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [projectList, setProjectList] = useState([]);
+  const [projectList, setProjectList] = useState<{ label: string; value: number }[]>([]);
   const [projectId, setProjectId] = useState(-1);
   const [formData, setFormData ] = useState({ projectId: -1, key: 'zh-cn', value: '' });
   const location = useLocation();
@@ -134,8 +249,15 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     setEditingKey(null);
     setIsModalVisible(false);
   };
+  const components = {
+    body: {
+      row: EditableRow,
+      cell: EditableCell,
+    },
+  };
   // keyName, en, zh_cn, zh_hant, es, fr, it, ja, kr, description
-  const columns: TableColumnsType<DataType> = [
+  const langType = ['en-US', 'zh-CN', 'zh-Hant', 'es', 'fr', 'it', 'ja', 'kr'];
+  const columns = [
     {
       title: 'no.',
       dataIndex: 'index',
@@ -150,7 +272,6 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'keyName',
       width: 160,
       ellipsis: true,
-      
       fixed: 'left',
     },
     {
@@ -159,14 +280,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'en-US',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'en-US',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'en-US'),
     },
     {
       title: '中文',
@@ -174,14 +289,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'zh-CN',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'zh-CN',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'zh-CN'),
     },
     {
       title: '繁体',
@@ -189,14 +298,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'zh-Hant',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'zh-Hant',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'zh-Hant'),
     },
     {
       title: 'Spanish',
@@ -204,14 +307,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'es',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'es',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'es'),
     },
     {
       title: 'French',
@@ -219,14 +316,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'fr',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'fr',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'fr'),
     },
     {
       title: 'Italian',
@@ -234,14 +325,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'it',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'it',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'it'),
     },
     {
       title: 'Japanese',
@@ -249,14 +334,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'ja',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'ja',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'ja'),
     },
     {
       title: 'Korean',
@@ -264,14 +343,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       key: 'kr',
       width: 200,
       ellipsis: true,
-
-      render: (text: any, record: any) => (
-
-            record?.translations?.find(
-              (item: { language: string }) => item.language === 'kr',
-            )?.value
-
-      ),
+      editable: true,
+      render: (text: any, record: any) => renderCell(text, record, 'kr'),
     },
     {
       title: 'Description',
@@ -280,6 +353,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       width: 200,
       // hidden: true,
       ellipsis: true,
+      editable: true,
     },
     {
       title: 'CreatedTime',
@@ -303,7 +377,42 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
         </Space>
       ),
     },
-  ];
+  ].map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: DataType) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
+
+  const handleSave = async (row: DataType, lngInfo: any) => {
+    const newData = [...keys];
+    const index = newData.findIndex((item) => row.id === (item as any).id);
+    const item = newData[index]
+    const newItem = {
+      ...item,
+      ...row,
+    }
+    newData.splice(index, 1, newItem);
+    setKeys(newData);
+    // 同步到远程
+    try {
+      const res = await updateTranslationKeyByLangId(lngInfo.id, lngInfo)
+      if(res.code === 200) {
+        message.success('保存成功')
+      }
+    } catch (error) {
+      // message.error('保存成功')
+    }
+  };
 
   const onChange = (value: number) => {
     setProjectId(value);
@@ -381,7 +490,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
         >
           <div style={{ flex: 1, overflow: 'hidden' }}>
             <Table
-              columns={columns}
+              columns={columns as any}
               dataSource={keys}
               loading={loading}
               className={styles.customTable}
@@ -398,6 +507,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
                 pageSizeOptions: ['10', '20', '50'],
                 showQuickJumper: true,
               }}
+              components={components}
               onChange={handleTableChange}
             />
           </div>

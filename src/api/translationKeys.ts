@@ -21,12 +21,22 @@ export const createTranslationKey = async (projectId: string, key: any) => {
   }
 };
 
-export const updateTranslationKey = async (projectId: string, keyId: string, key: any) => {
+export const updateTranslationKey = async (projectId: string, keyId: string, params: any) => {
   try {
-    const response = await apiClient.put(`/projects/${projectId}/keys/${keyId}`, key);
+    const response = await apiClient.put(`/projects/${projectId}/keys/${keyId}`, params);
     return response;
   } catch (error) {
-    console.error("Error updating translation key: ", error);
+    console.error("Error updating translation: ", error);
+    throw error;
+  }
+};
+
+export const updateTranslationKeyByLangId = async (langId: string, params: any) => {
+  try {
+    const response = await apiClient.put(`/projects/transaltions/${langId}`, params);
+    return response;
+  } catch (error) {
+    console.error("Error updating translation: ", error);
     throw error;
   }
 };
