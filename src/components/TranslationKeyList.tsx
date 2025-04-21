@@ -155,11 +155,16 @@ const renderCell = (text: any, record: any, dataIndex: string) => (
     (item: { language: string }) => item.language === dataIndex,
   )?.value || "待补充翻译"
 );
+interface PaginationParams {
+  current: number
+  pageSize: number
+}
 const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   const [keys, setKeys] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(20);
+  const [pagination, setPagination] = useState<PaginationParams>({ current: 1, pageSize: 10 })
   const [total, setTotal] = useState(0);
   const [editingKey, setEditingKey] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -168,11 +173,12 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   const [formData, setFormData ] = useState({ projectId: -1, key: 'zh-cn', value: '' });
   const location = useLocation();
   const { styles } = useStyle();
+  const [form] = Form.useForm()
   // const user = useUserStore(state => state.user);
-  const fetchKeys = async (page: number, limit: number) => {
+  const fetchKeys = async (pagination: PaginationParams) => {
     setLoading(true);
     try {
-      const res = await getProjectKeys(projectId, page, limit);
+      const res = await getProjectKeys(projectId, pagination.current, pagination.pageSize);
       const {code, data} = res;
       if (code === 200) {
         setKeys(data.rows);
@@ -219,15 +225,15 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     if (projectId < 0) {
       return;
     }
-    fetchKeys(currentPage, pageSize);
-  }, [projectId, currentPage, pageSize]);
+    fetchKeys(pagination);
+  }, [projectId, pagination]);
 
   const handleDelete = async (keyId: number) => {
     try {
       const res = await deleteTranslationKey(projectId, keyId);
       if (res.code === 200) {
         message.success('Translation key deleted successfully');
-        fetchKeys(currentPage, pageSize);
+        fetchKeys(pagination);
       }
     } catch (error) {
       message.error('Failed to delete translation key');
@@ -235,9 +241,10 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
   };
 
   const handleTableChange = (pagination: any) => {
-    setCurrentPage(pagination.current);
-    setPageSize(pagination.pageSize);
+    // setCurrentPage(pagination.current);
+    // setPageSize(pagination.pageSize);
     // fetchKeys(pagination.current, pagination.pageSize);
+    setPagination({ current: pagination.current, pageSize: pagination.pageSize })
   };
 
   const handleEdit = (key: any) => {
@@ -256,7 +263,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     },
   };
   // keyName, en, zh_cn, zh_hant, es, fr, it, ja, kr, description
-  const langType = ['en-US', 'zh-CN', 'zh-Hant', 'es', 'fr', 'it', 'ja', 'kr'];
+  // const langType = ['en-US', 'zh-CN', 'zh-Hant', 'es', 'fr', 'it', 'ja', 'kr'];
   const columns = [
     {
       title: 'no.',
@@ -426,6 +433,16 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     console.log(`selected ${value}`);
     setFormData({ ...formData, key: value });
   }
+  // const handleSearch = () => {
+  //   setPagination(prev => ({ ...prev, current: 1 }))
+  //   fetchData()
+  // }
+
+  // const handleReset = () => {
+  //   form.resetFields()
+  //   setPagination(prev => ({ ...prev, current: 1 }))
+  //   fetchData()
+  // }
   console.log(keys)
   return (
     <>
@@ -443,36 +460,6 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
             size="middle"
             style={{ width: 200 }}
           />
-          {/* <Space.Compact>
-            <Select
-              style={{ width: 200 }}
-              value={formData.key}
-              onChange={value => setFormData({ ...formData, key: value })}
-              // allowClear={true}
-              options={columns
-                .filter((item, index) => index > 0 && index < 10)
-                .map((item) => ({ value: item.key, label: item.title }))}
-            />
-            <Input value={formData.value} onChange={(e) => setFormData({ ...formData, value: e.target.value })}  />
-          </Space.Compact>
-          <Button
-            size="small"
-            type="primary"
-            icon={<SearchOutlined />}
-            disabled={projectId > 0 ? false : true}
-            onClick={() => setIsModalVisible(true)}
-          >
-            查询
-          </Button> */}
-          {/* <Button
-          size="small"
-          type="primary"
-          icon={<SearchOutlined />}
-          disabled={projectId>0? false:true}
-          onClick={() => setIsModalVisible(true)}
-        >
-          重置
-        </Button> */}
           <Button
             size="small"
             type="primary"
@@ -483,6 +470,15 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
             新增
           </Button>
         </Space>
+        {/* <div style={{ marginBottom: 16 }}>
+          <SearchForm
+            form={form}
+            items={formItems}
+            onSearch={handleSearch}
+            onReset={handleReset}
+          />
+          {extraButtons && <div style={{ marginTop: 8 }}>{extraButtons}</div>}
+        </div> */}
       </Flex>
       <div style={{ flex: 1, minHeight: 0 }}>
         <div
@@ -499,8 +495,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
               size="small"
               scroll={{ y: 'calc(100vh - 360px)', x: 'max-content' }} // 动态计算
               pagination={{
-                current: currentPage,
-                pageSize: pageSize,
+                current: pagination.current,
+                pageSize: pagination.pageSize,
                 total: total,
                 // onChange: handleTableChange,
                 showSizeChanger: true,
@@ -526,7 +522,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
             translationKey={editingKey}
             onSuccess={() => {
               handleModalClose();
-              fetchKeys(currentPage, pageSize);
+              fetchKeys(pagination);
             }}
           />
         </Modal>
