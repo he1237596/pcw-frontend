@@ -1,13 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, message, Modal, Space } from 'antd';
-import { getProjects, deleteProject, exportProjects } from '../api/projects';
+import {
+  Table,
+  Button,
+  message,
+  Modal,
+  Space,
+  Form,
+  TablePaginationConfig,
+} from 'antd';
+import {
+  getProjects,
+  deleteProject,
+  exportProjects,
+  PaginationProps,
+} from '../api/projects';
 import { PlusOutlined } from '@ant-design/icons';
 // import { downloadFile } from '@utils/index';
 import ProjectForm from './ProjectForm';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom'
-import PermissionButton from '@components/PermissionButton'
+import { useNavigate } from 'react-router-dom';
+import PermissionButton from '@components/PermissionButton';
+import SearchForm from '@components/table/SearchForm';
+
 // import { useEditableTable } from '../hooks'
 // import {EditableTable, EditableTableColumn} from '@/components/temp/EditableCell'
 // import { ConfigProvider } from 'antd';
@@ -34,28 +49,34 @@ const useStyle = createStyles(({ css, token }) => {
             scrollbar-width: thin;
             scrollbar-gutter: stable;
           }
-          ${antCls}-table-body{
-            height: calc(100vh - 360px)
+          ${antCls}-table-body {
+            height: calc(100vh - 360px);
           }
         }
       }
-    `
+    `,
   };
 });
 const ProjectList: React.FC = () => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [pageSize, setPageSize] = useState(10);
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+  });
   const [total, setTotal] = useState(0);
   const [editingProject, setEditingProject] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { styles } = useStyle();
+  const [form] = Form.useForm();
   const navigate = useNavigate();
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const data = await getProjects(currentPage, pageSize);
+      const search = form.getFieldsValue();
+      const data = await getProjects({ ...pagination, search });
       setProjects(data.rows);
       setTotal(data.count);
     } catch (error) {
@@ -67,7 +88,7 @@ const ProjectList: React.FC = () => {
 
   useEffect(() => {
     fetchProjects();
-  }, [currentPage, pageSize]);
+  }, [pagination]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -79,9 +100,12 @@ const ProjectList: React.FC = () => {
     }
   };
 
-  const handleTableChange = (pagination: any) => {
-    setCurrentPage(pagination.current);
-    setPageSize(pagination.pageSize);
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    console.log('pagination', pagination);
+    setPagination({
+      pageSize: pagination.pageSize,
+      current: pagination.current,
+    });
   };
 
   const handleEdit = (project: any) => {
@@ -96,7 +120,7 @@ const ProjectList: React.FC = () => {
     } catch (error) {
       message.error('Failed to export project');
     }
-  }
+  };
 
   const handleModalClose = () => {
     setEditingProject(null);
@@ -126,14 +150,28 @@ const ProjectList: React.FC = () => {
       render: (text: any, record: any) => (
         <>
           <Space>
-            <Button size='small' type="link" onClick={()=>navigate(`/languages?projectId=${record.id}`)}>
+            <Button
+              size="small"
+              type="link"
+              onClick={() => navigate(`/languages?projectId=${record.id}`)}
+            >
               查看
             </Button>
-            <Button size='small' onClick={() => handleEdit(record)}>编辑</Button>
-            <Button size='small' onClick={() => handleExport(record.id, record.name)}>
+            <Button size="small" onClick={() => handleEdit(record)}>
+              编辑
+            </Button>
+            <Button
+              size="small"
+              onClick={() => handleExport(record.id, record.name)}
+            >
               导出
             </Button>
-            <PermissionButton permission='admin' size='small' danger onClick={() => handleDelete(record.id)}>
+            <PermissionButton
+              permission="admin"
+              size="small"
+              danger
+              onClick={() => handleDelete(record.id)}
+            >
               删除
             </PermissionButton>
           </Space>
@@ -141,18 +179,38 @@ const ProjectList: React.FC = () => {
       ),
     },
   ];
+  const formItems = [
+    {
+      name: 'Name',
+      label: '项目名称',
+      type: 'input' as const,
+      placeholder: '请输入项目名称',
+    },
+  ];
 
+  const handleReset = () => {
+    form.resetFields();
+    fetchProjects();
+  };
   return (
     <>
       <div style={{ flexShrink: 0, paddingBottom: 8 }}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setIsModalVisible(true)}
-          size='small'
-        >
-          新增
-        </Button>
+        <SearchForm
+          form={form}
+          items={formItems}
+          onSearch={fetchProjects}
+          onReset={handleReset}
+          extraButtons={
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setIsModalVisible(true)}
+              // size='small'
+            >
+              新增
+            </Button>
+          }
+        />
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
         <div
@@ -168,8 +226,8 @@ const ProjectList: React.FC = () => {
               rowKey="id"
               size="small"
               pagination={{
-                current: currentPage,
-                pageSize: pageSize,
+                current: pagination.current,
+                pageSize: pagination.pageSize,
                 total: total,
               }}
               onChange={handleTableChange}

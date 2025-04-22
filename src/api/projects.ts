@@ -1,9 +1,12 @@
 // import apiClient from "./index";
 import { request as apiClient } from "@/utils";
-
-export const getProjects = async (page: number, limit: number) => {
+import { TablePaginationConfig } from 'antd';
+export type PaginationProps = Pick<TablePaginationConfig, 'current' | 'pageSize'> & { search?: any }
+export const getProjects = async ({
+  current: page, pageSize: limit, search
+}: PaginationProps) => {
   try {
-    const response = await apiClient.get(`/projects`, { page, limit });
+    const response = await apiClient.get(`/projects`, { page, limit, filter: search? JSON.stringify(search): '' });
     return response.data;
   } catch (error) {
     console.error("Error fetching projects: ", error);

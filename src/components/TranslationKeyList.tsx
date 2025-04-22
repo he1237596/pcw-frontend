@@ -95,7 +95,7 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     const item = record.translations.find(
       (item: any) => item.language === dataIndex,
     );
-    form.setFieldsValue({ [dataIndex]:  item?.value });
+    form.setFieldsValue({ [dataIndex]: item?.value });
   };
 
   const save = async () => {
@@ -190,7 +190,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     pageSize: 10,
   });
   const [total, setTotal] = useState(0);
-  const [editingKey, setEditingKey] = useState(null);
+  const [editingKey, setEditingKey] = useState<any>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [projectList, setProjectList] = useState<
     { label: string; value: number }[]
@@ -211,7 +211,11 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       type: 'select' as const,
       options: projectList,
       rules: [{ required: true, message: 'Please select a project' }],
-      readOnly: true,
+      // readOnly: true,
+      allowClear: false,
+      onChange: (value: number) => {
+        setProjectId(value);
+      },
     },
     {
       name: 'keyName',
@@ -274,7 +278,10 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
       return;
     }
     try {
-      const res = await getProjectKeys(_projectId, pagination, {keyName, language, value});
+      const res = await getProjectKeys(_projectId, {
+        ...pagination,
+        search: { keyName, language, value },
+      });
       const { code, data } = res;
       if (code === 200) {
         setKeys(data.rows);
@@ -296,7 +303,10 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     const fetchProjects = async () => {
       setLoading(true);
       try {
-        const data = await getProjects(1, 999);
+        const data = await getProjects({
+          pageSize: 1000,
+          current: 1,
+        });
         setProjectList(
           data.rows.map((item: { name: string; id: number }) => ({
             label: item.name,
@@ -305,7 +315,6 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
         );
         if (projectId > 0) {
           setProjectId(projectId);
-
         } else {
           setProjectId(data.rows[0].id);
         }
@@ -351,8 +360,8 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
     });
   };
 
-  const handleEdit = (key: any) => {
-    setEditingKey(key);
+  const handleEdit = (keyInfo: any) => {
+    setEditingKey(keyInfo);
     setIsModalVisible(true);
   };
 
@@ -573,6 +582,16 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
           initialValues={{
             projectId: projectId,
           }}
+          extraButtons={
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              disabled={projectId > 0 ? false : true}
+              onClick={() => setIsModalVisible(true)}
+            >
+              新增
+            </Button>
+          }
         />
       </Flex>
       <div style={{ flex: 1, minHeight: 0 }}>
@@ -612,7 +631,7 @@ const TranslationKeyList: React.FC<TranslationKeyListProps> = () => {
           footer={null}
         >
           <TranslationKeyForm
-            projectId={projectId}
+            projectId={editingKey?.projectId || projectId}
             projectList={projectList}
             translationKey={editingKey}
             onSuccess={() => {
