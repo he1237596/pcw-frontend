@@ -11,7 +11,7 @@ const WelcomeComponent = () => {
   };
   const c = 2;
   console.log(t('welcome'), a, b);
-  
+
   return (
     <div>
       <h1>{t('welcome')}</h1>

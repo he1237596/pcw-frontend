@@ -6,15 +6,20 @@ export default function test() {
   const pagination = {
     current: 1,
     pageSize: 10,
-  }
-  const getProjects = (page: number, pageSize: number, search: Record<string, any> | string) => {
-    const searchString = typeof search === 'object' ? JSON.stringify(search) : search; // 这里可以根据你的需求处理搜索条件
+  };
+  const getProjects = (
+    page: number,
+    pageSize: number,
+    search: Record<string, any> | string,
+  ) => {
+    const searchString =
+      typeof search === 'object' ? JSON.stringify(search) : search; // 这里可以根据你的需求处理搜索条件
     // 这里写你的请求
     return Promise.resolve({
       rows: [],
       count: 0,
     });
-  } 
+  };
   const columns = [
     {
       title: '项目名称',
@@ -26,13 +31,14 @@ export default function test() {
       dataIndex: 'description',
       key: 'description',
     },
-  ]
+  ];
   return (
     <SearchableTable
       columns={columns}
-      request={(pagination: { current: number; pageSize: number }, search: Record<string, any>) =>
-        getProjects(pagination.current, pagination.pageSize, search)
-      }
+      request={(
+        pagination: { current: number; pageSize: number },
+        search: Record<string, any>,
+      ) => getProjects(pagination.current, pagination.pageSize, search)}
       formItems={[
         {
           name: 'name',

@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import {
-  ConfigProvider,
-  Button,
-  theme,
-  Space,
-  ThemeConfig,
-  App
-} from 'antd';
+import { ConfigProvider, Button, theme, Space, ThemeConfig, App } from 'antd';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
 import useToken from 'antd/es/theme/useToken';
 import { HashRouter as Router, useRoutes } from 'react-router-dom';
 import { routes } from './router';
-import { getCurrentLang } from './antdLocales'
-import Tips, { message } from '@components/Tips'
-import { PermissionProvider } from '@context/PermissionContext'
+import { getCurrentLang } from './antdLocales';
+import Tips, { message } from '@components/Tips';
+import { PermissionProvider } from '@context/PermissionContext';
 import { ThemeContext, ThemeMode } from '@context/ThemeContext'; // 路径按实际改
 const AppRoutes = () => {
   return useRoutes(routes);
@@ -37,10 +30,10 @@ const darkTheme = {
 
 const Index: React.FC = () => {
   const currentLang = i18next.language; // 获取当前语言
-  const [lang, setLang] = useState(currentLang)
+  const [lang, setLang] = useState(currentLang);
   const changeLanguage = (lng: string) => {
     i18next.changeLanguage(lng);
-    setLang(lng)
+    setLang(lng);
   };
   // const token = useToken();
   // const mode = theme.algorithm ? 'dark' : 'light';
@@ -76,14 +69,14 @@ const Index: React.FC = () => {
     );
   };
   // console.log(currentLang, getCurrentLang(lang), 88888)
-  useEffect((() => {
-    message.success('welcome to sigmic i18n manager')
-  }), [])
+  useEffect(() => {
+    message.success('welcome to sigmic i18n manager');
+  }, []);
   return (
     <ThemeContext.Provider value={{ themeData, toggleTheme, themeMode }}>
       <ConfigProvider theme={themeData} locale={getCurrentLang(currentLang)}>
         <PermissionProvider>
-        {/* <div>
+          {/* <div>
           语言切换：
           <Space>
             <Button onClick={() => changeLanguage('en')}>English</Button>
@@ -100,12 +93,15 @@ const Index: React.FC = () => {
             </Button>
           </Space>
         </div> */}
-        <Router>
-          <AppRoutes />
-        </Router>
-        <App message={{ maxCount: 1 }} notification={{ placement: 'bottomRight' }}>
-          <Tips />
-        </App>
+          <Router>
+            <AppRoutes />
+          </Router>
+          <App
+            message={{ maxCount: 1 }}
+            notification={{ placement: 'bottomRight' }}
+          >
+            <Tips />
+          </App>
         </PermissionProvider>
       </ConfigProvider>
     </ThemeContext.Provider>

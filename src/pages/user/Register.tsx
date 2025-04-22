@@ -230,8 +230,14 @@ const App: React.FC = () => {
                   Submit
                 </Button>
               </Form.Item>
-              <Form.Item label={''} labelAlign='right'>
-              已有账号?去<Button variant="link" size="small" type="link" href={`/#/user/login`}>
+              <Form.Item label={''} labelAlign="right">
+                已有账号?去
+                <Button
+                  variant="link"
+                  size="small"
+                  type="link"
+                  href={`/#/user/login`}
+                >
                   登录
                 </Button>
               </Form.Item>

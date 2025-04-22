@@ -8,25 +8,35 @@ import {
   UserOutlined,
   PoweroffOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, theme, Divider, Avatar, Dropdown, Flex, Card, Spin } from 'antd';
+import {
+  Layout,
+  Menu,
+  theme,
+  Divider,
+  Avatar,
+  Dropdown,
+  Flex,
+  Card,
+  Spin,
+} from 'antd';
 import Logo from '@assets/logo.png';
 import UserInfo from '@components/user/UserInfo';
 import UpdatePassword from '@components/user/UpdatePassword';
 import ThemeSetting from '@components/theme/ThemeSetting';
 import { useThemeContext } from '../context/ThemeContext';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '@api/user';
 import { generate } from '@ant-design/colors';
-import { usePermissions } from '../context/PermissionContext'
+import { usePermissions } from '../context/PermissionContext';
 const { Header, Content, Footer, Sider } = Layout;
 const Logout: React.FC = () => {
   const handlerLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/#/user/login';
-    logout()
-  }
+    logout();
+  };
   return <div onClick={handlerLogout}>退出登录</div>;
-}
+};
 
 const items = [
   {
@@ -64,22 +74,22 @@ const menuItems = [
   {
     key: '/languages',
     icon: <FieldStringOutlined />,
-    label: 'Languages'
+    label: 'Languages',
     // (
     //   <Link to="/projects/1/keys">
     //   Languages
     //   </Link>
     // ),
   },
-]
+];
 const App: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG, colorBgLayout, colorText },
   } = theme.useToken();
   const { themeMode } = useThemeContext();
   // const lightColor = generate(colorBgContainer)[9]; // 生成更浅的颜色
-  const location = useLocation() // 获取当前路径
-  const navigate = useNavigate()
+  const location = useLocation(); // 获取当前路径
+  const navigate = useNavigate();
   const { loading } = usePermissions();
   // const getSelectedKey = () => {
   //   const hashPath = window.location.hash.replace('#', '')
@@ -88,7 +98,7 @@ const App: React.FC = () => {
   //   return location.pathname || '/404'
   // }
 
-  const [selectedKey, setSelectedKey] = useState(location.pathname)
+  const [selectedKey, setSelectedKey] = useState(location.pathname);
 
   // useEffect(() => {
   //   const handleHashChange = () => {
@@ -104,7 +114,7 @@ const App: React.FC = () => {
     setSelectedKey(location.pathname);
   }, [location.pathname]); // 依赖 pathname，变化时触发
 
-  console.log(selectedKey, 'selectedKey')
+  console.log(selectedKey, 'selectedKey');
   const filterStyle =
     themeMode === 'light'
       ? `drop-shadow(0 0 4px ${colorText}) brightness(0.2)`

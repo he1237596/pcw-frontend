@@ -119,7 +119,10 @@ export function EditableTable<T extends { [key: string]: any }>({
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <Typography.Link onClick={() => save(record[rowKey])} style={{ marginRight: 8 }}>
+            <Typography.Link
+              onClick={() => save(record[rowKey])}
+              style={{ marginRight: 8 }}
+            >
               Save
             </Typography.Link>
             <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
@@ -127,7 +130,10 @@ export function EditableTable<T extends { [key: string]: any }>({
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
+          <Typography.Link
+            disabled={editingKey !== ''}
+            onClick={() => edit(record)}
+          >
             Edit
           </Typography.Link>
         );

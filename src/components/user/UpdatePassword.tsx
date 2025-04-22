@@ -60,13 +60,13 @@ const UserInfo: React.FC = () => {
         password: SHA256(password).toString(),
         oldPassword: SHA256(oldPassword).toString(),
       };
-     const res = await updatePassword(params);
+      const res = await updatePassword(params);
       if (res.code === 200) {
         message.success(res.msg);
-        setOpen(false)
+        setOpen(false);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setConfirmLoading(false);
     }

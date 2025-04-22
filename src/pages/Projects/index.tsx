@@ -1,5 +1,5 @@
-import React from "react";
-import ProjectList from "./ProjectList";
+import React from 'react';
+import ProjectList from './ProjectList';
 import { Card } from 'antd';
 import { createStyles } from 'antd-style';
 const useStyle = createStyles(({ css, token }) => {
@@ -19,15 +19,19 @@ const useStyle = createStyles(({ css, token }) => {
     `,
     customCard: css`
       ${antCls}-card-body {
-       padding: 16px 16px 0;
+        padding: 16px 16px 0;
       }
     `,
   };
 });
 const ProjectsPage: React.FC = () => {
-  const { styles } = useStyle()
+  const { styles } = useStyle();
   return (
-    <Card title='项目列表' style={{ display: "flex", flexDirection: "column", height: '100%' }} className={styles.customCard}>
+    <Card
+      title="项目列表"
+      style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      className={styles.customCard}
+    >
       {/* <h3>项目列表</h3> */}
       <ProjectList />
     </Card>

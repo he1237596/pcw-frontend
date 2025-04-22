@@ -46,8 +46,8 @@ const App: React.FC = () => {
   const handleSave = (key: string | number, updatedFields: Partial<User>) => {
     setData((prev) =>
       prev.map((item) =>
-        item.key === key ? { ...item, ...updatedFields } : item
-      )
+        item.key === key ? { ...item, ...updatedFields } : item,
+      ),
     );
   };
   return (

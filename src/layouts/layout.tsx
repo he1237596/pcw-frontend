@@ -12,7 +12,7 @@ const layout = () => {
           Demo
         </Button>
         <Button type="link" href="#/projects">
-        Projects
+          Projects
         </Button>
         <Button type="link" href="#/demo">
           Demo

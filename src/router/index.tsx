@@ -24,7 +24,7 @@ export const mainRoutes = [
   //   path: '*',
   //   element: <div>404</div>,
   // },
-]
+];
 export const routes: RouteObject[] = [
   {
     path: '/user',
@@ -34,7 +34,7 @@ export const routes: RouteObject[] = [
       { path: 'register', element: <Register /> },
       {
         path: '*',
-        element: <Navigate to="/user/login" replace /> ,
+        element: <Navigate to="/user/login" replace />,
       },
     ],
     // errorElement: <div>出错啦</div>,

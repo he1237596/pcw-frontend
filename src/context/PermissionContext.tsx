@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react';
 import axios from 'axios';
 import { getUserInfo } from '@api/user';
 
@@ -18,7 +25,9 @@ interface PermissionContextType {
 }
 
 // 创建上下文并提供默认值
-const PermissionContext = createContext<PermissionContextType | undefined>(undefined);
+const PermissionContext = createContext<PermissionContextType | undefined>(
+  undefined,
+);
 
 export const usePermissions = (): PermissionContextType => {
   const context = useContext(PermissionContext);
@@ -32,31 +41,40 @@ interface PermissionProviderProps {
   children: ReactNode; // 子组件
 }
 
-export const PermissionProvider: React.FC<PermissionProviderProps> = ({ children }) => {
+export const PermissionProvider: React.FC<PermissionProviderProps> = ({
+  children,
+}) => {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // 添加loading状态
   useEffect(() => {
     // 获取用户权限
-    getUserInfo().then((res) => {
-      if (res.code === 200) {
-        setPermissions([
-          {
-            // id: res.data.id,
-            code: res.data.roleCode,
-            name: res.data.roleName
-          }
-        ]);
-      }
-      setLoading(false); // 设置加载状态为false
-    }).catch((error) => {
-      console.error('Error fetching user permissions:', error);
-      setLoading(false); // 设置加载状态为false
-    })
+    getUserInfo()
+      .then((res) => {
+        if (res.code === 200) {
+          setPermissions([
+            {
+              // id: res.data.id,
+              code: res.data.roleCode,
+              name: res.data.roleName,
+            },
+          ]);
+        }
+        setLoading(false); // 设置加载状态为false
+      })
+      .catch((error) => {
+        console.error('Error fetching user permissions:', error);
+        setLoading(false); // 设置加载状态为false
+      });
   }, []);
 
-  const checkHasRole = useCallback((roleCode: string) => {
-    return permissions.some(p => p.code === 'Sadmin' || p.code === roleCode);
-  }, [permissions])
+  const checkHasRole = useCallback(
+    (roleCode: string) => {
+      return permissions.some(
+        (p) => p.code === 'Sadmin' || p.code === roleCode,
+      );
+    },
+    [permissions],
+  );
 
   return (
     <PermissionContext.Provider value={{ permissions, loading, checkHasRole }}>

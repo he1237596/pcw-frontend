@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig } from 'axios';
 import { message } from 'antd';
 export const handleRequestHeader = (config: any) => {
   config['xxxx'] = 'xxx';
@@ -31,7 +31,6 @@ export const handleNetworkError = (errStatus?: number) => {
   message.error(errMessage);
 };
 
-
 export const handleAuthError = (errno: number) => {
   const authErrMap: Record<number, string> = {
     10031: '登录失效，需要重新登录',
@@ -59,4 +58,3 @@ export const handleGeneralError = (errno: string, errmsg: string) => {
   }
   return true;
 };
-

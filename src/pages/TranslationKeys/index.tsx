@@ -1,6 +1,6 @@
-import React from "react";
-import TranslationKeyList from "./TranslationKeyList";
-import { useParams } from "react-router-dom";
+import React from 'react';
+import TranslationKeyList from './TranslationKeyList';
+import { useParams } from 'react-router-dom';
 import { Card } from 'antd';
 import { createStyles } from 'antd-style';
 interface TranslationKeyListProps {
@@ -23,17 +23,21 @@ const useStyle = createStyles(({ css, token }) => {
     `,
     customCard: css`
       ${antCls}-card-body {
-       padding: 16px 16px 0;
+        padding: 16px 16px 0;
       }
     `,
   };
 });
 const TranslationKeysPage: React.FC = (props: any) => {
-  const { styles } = useStyle()
+  const { styles } = useStyle();
   // const { projectId } = match.params;
   // const { projectId } = useParams<{ projectId: string }>();
   return (
-    <Card title="多语言列表" style={{ display: "flex", flexDirection: "column", height: '100%' }} className={styles.customCard}>
+    <Card
+      title="多语言列表"
+      style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+      className={styles.customCard}
+    >
       {/* <h3>多语言列表</h3> */}
       <TranslationKeyList />
     </Card>

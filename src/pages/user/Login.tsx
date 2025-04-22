@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { getUserInfo, login } from '@api/user';
-import { useUserStore } from '../../store/userUserStore'
+import { useUserStore } from '../../store/userUserStore';
 type FieldType = {
   username?: string;
   password?: string;
@@ -107,7 +107,7 @@ const Logo: React.FC = () => {
 
 const App: React.FC = () => {
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser)
+  const setUser = useUserStore((state) => state.setUser);
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
     const { username = '', password = '', remember } = values;
@@ -128,11 +128,10 @@ const App: React.FC = () => {
       getUserInfo().then((res) => {
         if (res.code === 200) {
           // setUserInfo(res.data);
-          setUser(res.data)
+          setUser(res.data);
           navigate('/projects');
         }
       });
-      
     }
   };
 
@@ -148,7 +147,6 @@ const App: React.FC = () => {
 
   return (
     <Layout style={{ height: '100vh' }}>
-
       <Content>
         {/* <Card> */}
         <Flex
@@ -213,8 +211,14 @@ const App: React.FC = () => {
                   Submit
                 </Button>
               </Form.Item>
-              <Form.Item label={''} labelAlign='right'>
-              没有账号?去<Button variant="link" size="small" type="link" href={`/#/user/register`}>
+              <Form.Item label={''} labelAlign="right">
+                没有账号?去
+                <Button
+                  variant="link"
+                  size="small"
+                  type="link"
+                  href={`/#/user/register`}
+                >
                   注册
                 </Button>
               </Form.Item>

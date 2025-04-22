@@ -70,14 +70,14 @@ const UserInfo: React.FC = () => {
   };
 
   const handleChange = (info: any) => {
-    console.log(info)
+    console.log(info);
     if (info.file.status === 'uploading') {
       setLoading(true);
       return;
     }
     if (info.file.status === 'done') {
       console.log('上传成功:', info.file.response);
-      const { code, data } = info.file.response
+      const { code, data } = info.file.response;
       // Get this url from response in real world.
       getBase64(info.file.originFileObj, (url) => {
         console.log('url', url);
@@ -102,7 +102,7 @@ const UserInfo: React.FC = () => {
 
   const handleOk = async () => {
     setConfirmLoading(true);
-    const res = await updateUserInfo(userInfo)
+    const res = await updateUserInfo(userInfo);
     if (res.code === 200) {
       setConfirmLoading(false);
       message.success(res.msg);
@@ -118,9 +118,9 @@ const UserInfo: React.FC = () => {
   const changePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo({
       ...userInfo,
-      phone_number: e.target.value
-    })
-  }
+      phone_number: e.target.value,
+    });
+  };
   return (
     <>
       <div onClick={showModal}>个人信息</div>
@@ -148,7 +148,11 @@ const UserInfo: React.FC = () => {
           >
             <Avatar
               size={100}
-              src={userInfo?.profile_picture? `http://192.168.11.146:9000${userInfo.profile_picture}` : ''}
+              src={
+                userInfo?.profile_picture
+                  ? `http://192.168.11.146:9000${userInfo.profile_picture}`
+                  : ''
+              }
               icon={<UserOutlined />}
             />
           </Upload>
@@ -171,7 +175,7 @@ const UserInfo: React.FC = () => {
               },
             ]}
           >
-            { userInfo?.username }
+            {userInfo?.username}
             {/* <Input readOnly /> */}
           </Form.Item>
           <Form.Item
@@ -188,7 +192,7 @@ const UserInfo: React.FC = () => {
               },
             ]}
           >
-            { userInfo?.email }
+            {userInfo?.email}
             {/* <Input readOnly /> */}
           </Form.Item>
           <Form.Item
@@ -202,7 +206,11 @@ const UserInfo: React.FC = () => {
             // ]}
           >
             {/* <Input addonBefore={prefixSelector} style={{ width: '100%' }} /> */}
-            <Input value={userInfo.phone_number} style={{ width: '100%' }} onChange={changePhoneNumber} />
+            <Input
+              value={userInfo.phone_number}
+              style={{ width: '100%' }}
+              onChange={changePhoneNumber}
+            />
           </Form.Item>
         </Form>
       </Modal>

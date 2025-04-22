@@ -12,8 +12,11 @@ import zhTW from 'antd/locale/zh_TW';
 // message.success('Success!');
 export const getCurrentLang = (lang: string) => {
   // return antdLocales[window.localStorage.getItem('locale') || 'en-US']
-  const key = lang || window.localStorage.getItem('locale') as keyof typeof antdLocales || 'en-US'
-  return antdLocales[key as keyof typeof antdLocales]
+  const key =
+    lang ||
+    (window.localStorage.getItem('locale') as keyof typeof antdLocales) ||
+    'en-US';
+  return antdLocales[key as keyof typeof antdLocales];
 };
 export const antdLocales = {
   'en': enUS,
@@ -27,4 +30,4 @@ export const antdLocales = {
   'zh': zhCN,
   'zh-HK': zhHK,
   'zh-TW': zhTW,
-}
+};

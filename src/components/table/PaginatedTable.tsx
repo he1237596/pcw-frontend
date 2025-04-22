@@ -1,15 +1,15 @@
-import React from 'react'
-import { Table, TablePaginationConfig } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
+import React from 'react';
+import { Table, TablePaginationConfig } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 
 interface PaginatedTableProps<T> {
-  rowKey?: string
-  columns: ColumnsType<T>
-  data: T[]
-  loading: boolean
-  pagination: TablePaginationConfig
-  scrollHeight?: string | number
-  onChange?: (pagination: TablePaginationConfig) => void
+  rowKey?: string;
+  columns: ColumnsType<T>;
+  data: T[];
+  loading: boolean;
+  pagination: TablePaginationConfig;
+  scrollHeight?: string | number;
+  onChange?: (pagination: TablePaginationConfig) => void;
 }
 
 function PaginatedTable<T extends object>({
@@ -31,7 +31,7 @@ function PaginatedTable<T extends object>({
       onChange={onChange}
       scroll={{ y: scrollHeight || 'calc(100vh - 360px)' }}
     />
-  )
+  );
 }
 
-export default PaginatedTable
+export default PaginatedTable;

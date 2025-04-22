@@ -1,1 +1,1 @@
-export * from './useEditableTable'
+export * from './useEditableTable';

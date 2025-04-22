@@ -4,9 +4,7 @@ import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 interface IProps {
   url: string;
 }
-const UploadAvatar: React.FC<IProps> = ({
-  url
-}) => {
+const UploadAvatar: React.FC<IProps> = ({ url }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>(url); // 默认用户图像地址
 
@@ -44,7 +42,6 @@ const UploadAvatar: React.FC<IProps> = ({
       });
     }
   };
-
 
   return (
     <div>

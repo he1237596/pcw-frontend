@@ -5,12 +5,21 @@ import {
   SettingOutlined,
   LogoutOutlined,
   UserOutlined,
-  PoweroffOutlined
+  PoweroffOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, theme, Divider, Avatar, Dropdown, Flex, Card } from 'antd';
+import {
+  Layout,
+  Menu,
+  theme,
+  Divider,
+  Avatar,
+  Dropdown,
+  Flex,
+  Card,
+} from 'antd';
 import Logo from '@assets/logo.png';
 import UserInfo from '@components/user/UserInfo';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '@api/user';
 import { generate } from '@ant-design/colors';
 const { Header, Content, Footer, Sider } = Layout;
@@ -18,7 +27,7 @@ const Logout: React.FC = () => {
   const handlerLogout = () => {
     localStorage.removeItem('token');
     window.location.href = '/#/user/login';
-    logout()
-  }
+    logout();
+  };
   return <div onClick={handlerLogout}>退出登录</div>;
-}
+};
