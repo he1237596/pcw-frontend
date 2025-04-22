@@ -1,5 +1,5 @@
 import React from "react";
-import TranslationKeyList from "../components/TranslationKeyList";
+import TranslationKeyList from "./TranslationKeyList";
 import { useParams } from "react-router-dom";
 import { Card } from 'antd';
 import { createStyles } from 'antd-style';

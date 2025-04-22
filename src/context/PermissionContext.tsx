@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import axios from 'axios';
-import { getUserInfo } from '@/api/user';
+import { getUserInfo } from '@api/user';
 
 // 定义权限数据的类型
 interface Permission {

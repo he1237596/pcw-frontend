@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Form } from 'antd'
+import { Form, TablePaginationConfig } from 'antd'
 import SearchForm, { SearchFormItem, SearchFormRef } from './SearchForm'
 import PaginatedTable from './PaginatedTable'
-
+// export type PaginationProps = Pick<TablePaginationConfig, 'current' | 'pageSize'> & { search?: any }
+export interface  PaginationProps extends Pick<TablePaginationConfig, 'current' | 'pageSize'> { search?: any }
 interface PaginationParams {
   current: number
   pageSize: number
@@ -72,8 +73,8 @@ function SearchableTable<T extends object>({
           onSearch={handleSearch}
           onReset={handleReset}
           ref={formRef}
+          extraButtons={extraButtons}
         />
-        {extraButtons && <div style={{ marginTop: 8 }}>{extraButtons}</div>}
       </div>
       <PaginatedTable<T>
         columns={columns}

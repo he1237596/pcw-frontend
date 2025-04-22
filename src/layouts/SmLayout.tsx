@@ -8,11 +8,11 @@ import {
   PoweroffOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, theme, Divider, Avatar, Dropdown, Flex, Card, Spin } from 'antd';
-import Logo from '@/assets/logo.png';
-import UserInfo from '@/components/user/UserInfo';
-import UpdatePassword from '@/components/user/UpdatePassword';
+import Logo from '@assets/logo.png';
+import UserInfo from '@components/user/UserInfo';
+import UpdatePassword from '@components/user/UpdatePassword';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import { logout } from '../api/user';
+import { logout } from '@api/user';
 import { generate } from '@ant-design/colors';
 import { usePermissions } from '../context/PermissionContext'
 const { Header, Content, Footer, Sider } = Layout;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { createProject, updateProject } from '../api/projects';
+import { createProject, updateProject } from '@api/projects';
 
 const ProjectForm = ({ project, onSuccess }: any) => {
   const [form] = Form.useForm();

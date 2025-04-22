@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectList from "../components/ProjectList";
+import ProjectList from "./ProjectList";
 import { Card } from 'antd';
 import { createStyles } from 'antd-style';
 const useStyle = createStyles(({ css, token }) => {

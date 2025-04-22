@@ -1,6 +1,6 @@
 // import apiClient from "./index";
-import { request as apiClient } from "@/utils";
-// import Tips, { message } from '@/components/Tips'
+import { request as apiClient } from "@utils/index";
+// import Tips, { message } from '@components/Tips'
 interface UserInfo {
   username: string;
   email: string;

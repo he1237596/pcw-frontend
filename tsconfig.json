@@ -15,7 +15,7 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["*"],
+      // "@/*": ["*"],
       "@assets/*": ["assets/*"],
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
@@ -24,7 +24,10 @@
       "@pages/*": ["pages/*"],
       "@router/*": ["router/*"],
       "@services/*": ["services/*"],
-      "@api/*": ["api/*"]
+      "@api/*": ["api/*"],
+      "@context/*": ["context/*"],
+      "@hooks/*": ["hooks/*"],
+      "@layouts/*": ["layouts/*"]
     }
   },
   "include": ["src"]

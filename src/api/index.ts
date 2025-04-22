@@ -1,5 +1,5 @@
 import axios from "axios";
-// import { request } from "@/utils";
+// import { request } from "@utils";
 const apiClient = axios.create({
   baseURL: "http://192.168.11.146:8080/api",
   headers: {

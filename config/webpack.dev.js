@@ -50,7 +50,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
     alias: {
-      '@': path.resolve(__dirname, '../src'),
+      // '@': path.resolve(__dirname, '../src'),
       '@assets': path.resolve(__dirname, '../src/assets'),
       '@components': path.resolve(__dirname, '../src/components'),
       '@utils': path.resolve(__dirname, '../src/utils'),
@@ -59,6 +59,9 @@ module.exports = {
       '@pages': path.resolve(__dirname, '../src/pages'),
       '@router': path.resolve(__dirname, '../src/router'),
       '@api': path.resolve(__dirname, '../src/api'),
+      '@context': path.resolve(__dirname, '../src/context'),
+      '@hooks': path.resolve(__dirname, '../src/hooks'),
+      '@layouts': path.resolve(__dirname, '../src/layouts'),
     },
   },
   module: {

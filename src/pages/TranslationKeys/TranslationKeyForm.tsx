@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Form, Input, Button, message, Select } from "antd";
-import { createTranslationKey, updateTranslationKey } from "../api/translationKeys";
+import { createTranslationKey, updateTranslationKey } from "@api/translationKeys";
 interface Translation {
   language: string;
   value: string;

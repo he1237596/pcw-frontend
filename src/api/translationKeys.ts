@@ -1,5 +1,5 @@
 // import apiClient from "./index";
-import { request as apiClient } from "@/utils";
+import { request as apiClient } from "@utils/index";
 import { TablePaginationConfig } from 'antd';
 export type PaginationProps = Pick<TablePaginationConfig, 'current' | 'pageSize'> & { search?: any }
 

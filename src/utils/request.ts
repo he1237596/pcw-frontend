@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, isAxiosError } from 'axios'
 // import { message } from 'antd'
-import { message } from '@/components/Tips'
+import { message } from '@components/Tips'
 import { handleAuth, handleGeneralError, handleAuthError } from './requestTools'
 interface ListData {
   list: any[]

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Pagination } from 'antd';
-import GT1 from '@/assets/images/GT1.png';
+import GT1 from '@assets/images/GT1.png';
 const WelcomeComponent = () => {
   const { t } = useTranslation();
   const a = '12345';

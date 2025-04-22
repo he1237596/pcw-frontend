@@ -8,7 +8,7 @@ import {
   PoweroffOutlined
 } from '@ant-design/icons';
 import { Layout, Menu, theme, Divider, Avatar, Dropdown, Flex, Card } from 'antd';
-import Logo from '@/assets/logo.png';
+import Logo from '@assets/logo.png';
 import UserInfo from '@components/user/UserInfo';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { logout } from '@api/user';

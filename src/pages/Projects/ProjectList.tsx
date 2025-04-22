@@ -13,7 +13,7 @@ import {
   deleteProject,
   exportProjects,
   PaginationProps,
-} from '../api/projects';
+} from '../../api/projects';
 import { PlusOutlined } from '@ant-design/icons';
 // import { downloadFile } from '@utils/index';
 import ProjectForm from './ProjectForm';
@@ -24,7 +24,7 @@ import PermissionButton from '@components/PermissionButton';
 import SearchForm from '@components/table/SearchForm';
 
 // import { useEditableTable } from '../hooks'
-// import {EditableTable, EditableTableColumn} from '@/components/temp/EditableCell'
+// import {EditableTable, EditableTableColumn} from '@components/temp/EditableCell'
 // import { ConfigProvider } from 'antd';
 
 // const { getPrefixCls } = ConfigProvider;

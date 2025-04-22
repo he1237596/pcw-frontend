@@ -13,7 +13,7 @@ import useToken from 'antd/es/theme/useToken';
 import { HashRouter as Router, useRoutes } from 'react-router-dom';
 import { routes } from './router';
 import { getCurrentLang } from './antdLocales'
-import Tips, { message } from '@/components/Tips'
+import Tips, { message } from '@components/Tips'
 import { PermissionProvider } from './context/PermissionContext'
 
 const AppRoutes = () => {
