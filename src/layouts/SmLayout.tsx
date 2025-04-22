@@ -4,6 +4,7 @@ import {
   FieldStringOutlined,
   SettingOutlined,
   LogoutOutlined,
+  SwapOutlined,
   UserOutlined,
   PoweroffOutlined,
 } from '@ant-design/icons';
@@ -11,6 +12,8 @@ import { Layout, Menu, theme, Divider, Avatar, Dropdown, Flex, Card, Spin } from
 import Logo from '@assets/logo.png';
 import UserInfo from '@components/user/UserInfo';
 import UpdatePassword from '@components/user/UpdatePassword';
+import ThemeSetting from '@components/theme/ThemeSetting';
+import { useThemeContext } from '../context/ThemeContext';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { logout } from '@api/user';
 import { generate } from '@ant-design/colors';
@@ -26,6 +29,11 @@ const Logout: React.FC = () => {
 }
 
 const items = [
+  {
+    key: 'theme',
+    icon: React.createElement(SwapOutlined),
+    label: <ThemeSetting />,
+  },
   {
     key: 'setting',
     icon: React.createElement(UserOutlined),
@@ -66,8 +74,9 @@ const menuItems = [
 ]
 const App: React.FC = () => {
   const {
-    token: { colorBgContainer, borderRadiusLG, colorBgLayout },
+    token: { colorBgContainer, borderRadiusLG, colorBgLayout, colorText },
   } = theme.useToken();
+  const { themeMode } = useThemeContext();
   // const lightColor = generate(colorBgContainer)[9]; // 生成更浅的颜色
   const location = useLocation() // 获取当前路径
   const navigate = useNavigate()
@@ -96,86 +105,115 @@ const App: React.FC = () => {
   }, [location.pathname]); // 依赖 pathname，变化时触发
 
   console.log(selectedKey, 'selectedKey')
+  const filterStyle =
+    themeMode === 'light'
+      ? `drop-shadow(0 0 4px ${colorText}) brightness(0.2)`
+      : 'none';
 
   return (
-      <Layout>
-        <Sider
-          breakpoint="lg"
-          collapsedWidth="0"
-          // collapsed
-          onBreakpoint={(broken) => {
-            console.log(broken);
-          }}
-          onCollapse={(collapsed, type) => {
-            console.log(collapsed, type);
-          }}
-          collapsible
+    <Layout>
+      <Sider
+        breakpoint="lg"
+        collapsedWidth="0"
+        // collapsed
+        onBreakpoint={(broken) => {
+          console.log(broken);
+        }}
+        onCollapse={(collapsed, type) => {
+          console.log(collapsed, type);
+        }}
+        collapsible
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          overflow: 'hidden',
+          background: colorBgLayout,
+          // '& .ant-menu-item': {
+          //   width: '100%',
+          // },
+          borderRight: '1px solid var(--ant-color-split)',
+          // '& .ant-menu-item': {
+          //   width: '100%',
+          // },
+        }}
+      >
+        <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            height: '100vh',
-            overflow: 'hidden',
-            background: colorBgLayout,
-            // '& .ant-menu-item': {
-            //   width: '100%',
-            // },
-            borderRight: '1px solid var(--ant-color-split)',
-            // '& .ant-menu-item': {
-            //   width: '100%',
-            // },
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 64,
+            // borderBottom: '1px solid var(--ant-color-split)',
           }}
         >
+          <img
+            src={Logo}
+            alt="logo"
+            style={{
+              width: 120,
+              height: 'auto',
+              filter: filterStyle,
+              transition: 'filter 0.3s ease',
+            }}
+          />
+        </div>
+        {/* <Divider /> */}
+        <Menu
+          theme="dark"
+          mode="inline"
+          selectedKeys={[selectedKey]}
+          onClick={(e) => {
+            setSelectedKey(e.key);
+            navigate(e.key);
+          }}
+          // defaultSelectedKeys={[location.pathname]}
+          style={{
+            background: colorBgLayout,
+            borderRight: 'none',
+          }}
+          items={menuItems}
+        />
+      </Sider>
+      <Layout>
+        <Header
+          style={{
+            padding: 0,
+            background: colorBgLayout,
+            borderBottom: '1px solid var(--ant-color-split)',
+          }}
+        >
+          <Flex
+            justify="flex-end"
+            align="center"
+            style={{ height: '100%', paddingRight: 24 }}
+          >
+            <Divider
+              type="vertical"
+              style={{ height: '80%', padding: '0 8px' }}
+            />
+            <Dropdown menu={{ items }} placement="bottomRight">
+              {/* <Avatar size={40} src={<img src={Logo} alt="avatar" style={{ cursor: 'pointer' }} />} /> */}
+              <Avatar
+                style={{ backgroundColor: '#87d068', cursor: 'pointer' }}
+                icon={<UserOutlined />}
+              />
+            </Dropdown>
+          </Flex>
+        </Header>
+        <Content style={{ background: colorBgContainer }}>
           <div
             style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 64,
-              // borderBottom: '1px solid var(--ant-color-split)',
+              // margin: 16,
+              // minHeight: 360,
+              height: '100%',
+              // background: 'red',
+              // borderRadius: borderRadiusLG,
+              boxSizing: 'border-box',
+              padding: 8,
             }}
           >
-            <img src={Logo} alt="logo" />
-          </div>
-          {/* <Divider /> */}
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            onClick={(e) => {
-              setSelectedKey(e.key)
-              navigate(e.key)
-            }}
-            // defaultSelectedKeys={[location.pathname]}
-            style={{
-              background: colorBgLayout,
-              borderRight: 'none',
-            }}
-            items={menuItems}
-          />
-        </Sider>
-        <Layout>
-          <Header style={{ padding: 0, background: colorBgLayout, borderBottom: '1px solid var(--ant-color-split)'}}>
-            <Flex justify='flex-end' align='center' style={{ height: '100%', paddingRight: 24 }}>
-              <Divider type="vertical" style={{ height: '80%', padding: '0 8px' }} />
-              <Dropdown menu={{ items }} placement="bottomRight">
-                {/* <Avatar size={40} src={<img src={Logo} alt="avatar" style={{ cursor: 'pointer' }} />} /> */}
-                <Avatar style={{ backgroundColor: '#87d068', cursor: 'pointer' }} icon={<UserOutlined />} />
-              </Dropdown>
-            </Flex>
-          </Header>
-          <Content style={{ background: colorBgContainer}}>
-            <div
-              style={{
-                // margin: 16,
-                // minHeight: 360,
-                height: '100%',
-                // background: 'red',
-                // borderRadius: borderRadiusLG,
-                boxSizing: 'border-box',
-                padding: 8,
-              }}
-            >
-              {/* <div
+            {/* <div
                 style={{
                   // flex: 1,
                   background: colorBgContainer
@@ -186,19 +224,32 @@ const App: React.FC = () => {
                   // overflow: 'hidden',
                 }}
               > */}
-              {
-                loading ? (
-                  <Spin size="large"  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }} />  // 页面级别显示加载指示器
-                ) : <Outlet />
-              }
-              {/* </div> */}
-            </div>
-          </Content>
-          <Footer style={{ textAlign: 'center', borderTop: '1px solid var(--ant-color-split)'}}>
-            Simgic ©{new Date().getFullYear()} Created by Chris
-          </Footer>
-        </Layout>
+            {loading ? (
+              <Spin
+                size="large"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+              /> // 页面级别显示加载指示器
+            ) : (
+              <Outlet />
+            )}
+            {/* </div> */}
+          </div>
+        </Content>
+        <Footer
+          style={{
+            textAlign: 'center',
+            borderTop: '1px solid var(--ant-color-split)',
+          }}
+        >
+          Simgic ©{new Date().getFullYear()} Created by Chris
+        </Footer>
       </Layout>
+    </Layout>
   );
 };
 
