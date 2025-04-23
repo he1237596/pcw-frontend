@@ -7,8 +7,8 @@ i18n.use(initReactI18next).init({
     en: { translation: en },
     zh: { translation: zh },
   },
-  lng: 'en',
-  fallbackLng: 'en',
+  lng: 'zh', // 默认语言
+  fallbackLng: 'en', // 如果当前语言没有，则使用这个语言
   interpolation: {
     escapeValue: false,
   },
