@@ -14,6 +14,10 @@
     "isolatedModules": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
+    // "typeRoots": [
+    //   "./node_modules/@types",   // 默认的类型定义文件路径
+    //   "./src/types"
+    // ],
     "paths": {
       // "@/*": ["*"],
       "@assets/*": ["assets/*"],

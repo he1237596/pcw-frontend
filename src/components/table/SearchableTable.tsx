@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Form, TablePaginationConfig } from 'antd';
 import SearchForm, { SearchFormItem, SearchFormRef } from './SearchForm';
 import PaginatedTable from './PaginatedTable';
-// export type PaginationProps = Pick<TablePaginationConfig, 'current' | 'pageSize'> & { search?: any }
 export interface PaginationProps
   extends Pick<TablePaginationConfig, 'current' | 'pageSize'> {
   search?: any;

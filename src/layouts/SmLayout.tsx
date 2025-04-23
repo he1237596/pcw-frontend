@@ -170,7 +170,7 @@ const App: React.FC = () => {
         </div>
         {/* <Divider /> */}
         <Menu
-          theme="dark"
+          theme={themeMode}
           mode="inline"
           selectedKeys={[selectedKey]}
           onClick={(e) => {
