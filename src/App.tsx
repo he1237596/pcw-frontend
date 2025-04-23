@@ -7,7 +7,7 @@ import { HashRouter as Router, useRoutes } from 'react-router-dom';
 import { routes } from './router';
 import { getCurrentLang } from '@utils/antdLocales';
 import Tips, { message } from '@components/Tips';
-import { PermissionProvider } from '@context/PermissionContext';
+// import { PermissionProvider } from '@context/PermissionContext';
 import { useLangSwitcher } from '@hooks/useLangSwitcher'; // 根据实际路径引入
 import { ThemeContext, ThemeMode } from '@context/ThemeContext'; // 路径按实际改
 const AppRoutes = () => {
@@ -59,18 +59,18 @@ const Index: React.FC = () => {
     <ThemeContext.Provider value={{ themeData, toggleTheme, themeMode }}>
       {/* locale是antd组件的语言包,注意：时间组件的格式 */}
       <ConfigProvider theme={themeData} locale={getCurrentLang(currentLang)}>
-        <PermissionProvider>
-          {/* <div onClick={() => changeLanguage(currentLang === 'en'?'zh':'en')}>{t('welcome')}</div> */}
-          <Router>
-            <AppRoutes />
-          </Router>
-          <App
-            message={{ maxCount: 1 }}
-            notification={{ placement: 'bottomRight' }}
-          >
-            <Tips />
-          </App>
-        </PermissionProvider>
+        {/* <PermissionProvider> */}
+        {/* <div onClick={() => changeLanguage(currentLang === 'en'?'zh':'en')}>{t('welcome')}</div> */}
+        <Router>
+          <AppRoutes />
+        </Router>
+        <App
+          message={{ maxCount: 1 }}
+          notification={{ placement: 'bottomRight' }}
+        >
+          <Tips />
+        </App>
+        {/* </PermissionProvider> */}
       </ConfigProvider>
     </ThemeContext.Provider>
   );

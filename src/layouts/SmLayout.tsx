@@ -25,13 +25,17 @@ import UpdatePassword from '@components/user/UpdatePassword';
 import ThemeSetting from '@components/theme/ThemeSetting';
 import { useThemeContext } from '../context/ThemeContext';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { logout } from '@api/user';
+// import { logout } from '@api/user';
 import { generate } from '@ant-design/colors';
-import { usePermissions } from '../context/PermissionContext';
+// import { usePermissions } from '../context/PermissionContext';
+import { useUserStore } from '../store/userUserStore';
+
 const { Header, Content, Footer, Sider } = Layout;
 const Logout: React.FC = () => {
+  const { logout } = useUserStore();
+
   const handlerLogout = () => {
-    localStorage.removeItem('token');
+    // localStorage.removeItem('token');
     window.location.href = '/#/user/login';
     logout();
   };
@@ -90,7 +94,9 @@ const App: React.FC = () => {
   // const lightColor = generate(colorBgContainer)[9]; // 生成更浅的颜色
   const location = useLocation(); // 获取当前路径
   const navigate = useNavigate();
-  const { loading } = usePermissions();
+  // const { loading } = usePermissions();
+  const { loading } = useUserStore();
+  console.log('loading', loading);
   // const getSelectedKey = () => {
   //   const hashPath = window.location.hash.replace('#', '')
   //   console.log(location.pathname, hashPath)

@@ -107,7 +107,8 @@ const Logo: React.FC = () => {
 
 const App: React.FC = () => {
   const navigate = useNavigate();
-  const setUser = useUserStore((state) => state.setUser);
+  // const setUser = useUserStore((state) => state.setUser);
+  const { getUserInfo } = useUserStore();
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log('Success:', values);
     const { username = '', password = '', remember } = values;
@@ -123,15 +124,9 @@ const App: React.FC = () => {
     // console.log(md5(password), params)
     const res = await login(params);
     if (res.code === 200) {
-      message.success('登录成功');
-      localStorage.setItem('token', res.data.token);
-      getUserInfo().then((res) => {
-        if (res.code === 200) {
-          // setUserInfo(res.data);
-          setUser(res.data);
-          navigate('/projects');
-        }
-      });
+      // message.success('登录成功');
+      await getUserInfo(res.data.token);
+      navigate('/projects');
     }
   };
 

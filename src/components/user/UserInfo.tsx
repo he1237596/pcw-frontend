@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getUserInfo, updateUserInfo } from '@api/user';
+import { updateUserInfo, getUserInfo } from '@api/user';
+import type { UserInfo } from '@api/user';
 import {
   Modal,
   DatePicker,
@@ -11,6 +12,8 @@ import {
   Upload,
   Flex,
 } from 'antd';
+import { useUserStore } from '../../store/userUserStore';
+
 // import UploadAvatar from './UploadAvatar';
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
@@ -30,24 +33,24 @@ const prefixSelector = (
     </Select>
   </Form.Item>
 );
-interface UserInfo {
-  username: string;
-  email: string;
-  phone_number: string;
-  profile_picture: string;
-  [key: string]: any;
-}
+// interface UserInfo {
+//   username: string;
+//   email: string;
+//   phone_number: string;
+//   profile_picture: string;
+//   [key: string]: any;
+// }
 const UserInfo: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [userInfo, setUserInfo] = useState<UserInfo>({
+  const { userInfo: storeUserInfo, refreshUser } = useUserStore();
+  const [userInfo, setUserInfo] = useState<Partial<UserInfo>>({
     username: '',
     email: '',
     phone_number: '',
     profile_picture: '',
   });
   const [loading, setLoading] = useState(false);
-
   const getBase64 = (
     img: Blob,
     callback: { (url: any): void; (arg0: string | ArrayBuffer | null): any },
@@ -94,6 +97,9 @@ const UserInfo: React.FC = () => {
     getUserInfo().then((res) => {
       setUserInfo(res.data);
     });
+    // if (storeUserInfo) {
+    //   setUserInfo(storeUserInfo);
+    // }
   }, []);
 
   const showModal = () => {
@@ -106,6 +112,7 @@ const UserInfo: React.FC = () => {
     if (res.code === 200) {
       setConfirmLoading(false);
       message.success(res.msg);
+      refreshUser();
     }
     setOpen(false);
   };

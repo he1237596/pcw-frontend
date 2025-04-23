@@ -112,8 +112,8 @@ service.interceptors.response.use(
       return response;
     }
     if (code === 500) {
-      // message.error('服务器错误');
-      message.error(msg);
+      message.error('服务器错误');
+      // message.error(msg);
       return response;
     }
     if (code === 429) {

@@ -31,7 +31,8 @@
       "@api/*": ["api/*"],
       "@context/*": ["context/*"],
       "@hooks/*": ["hooks/*"],
-      "@layouts/*": ["layouts/*"]
+      "@layouts/*": ["layouts/*"],
+      "@store/*": ["store/*"]
     }
   },
   "include": ["src"]

@@ -1,9 +1,13 @@
 // import apiClient from "./index";
 import { request as apiClient } from '@utils/index';
 // import Tips, { message } from '@components/Tips'
-interface UserInfo {
+export interface UserInfo {
   username: string;
   email: string;
+  id: string;
+  name: string;
+  roleCode: string;
+  roleName: string;
   [key: string]: any;
 }
 export const getUserInfo = async () => {
@@ -16,7 +20,7 @@ export const getUserInfo = async () => {
   }
 };
 
-export const updateUserInfo = async (userInfo: UserInfo) => {
+export const updateUserInfo = async (userInfo: Partial<UserInfo>) => {
   try {
     const response = await apiClient.put(`/user`, userInfo);
     return response;
