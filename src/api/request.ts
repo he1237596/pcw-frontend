@@ -31,11 +31,14 @@ const getRequestKey = (config: AxiosRequestConfig): string => {
   const { method, url, params, data } = config;
   return `${method}-${url}-${JSON.stringify(params)}-${JSON.stringify(data)}`;
 };
+
 // const baseUrl = process?.env?.REACT_APP_API_BASE_URL
+// const prefix = '/api'
+
 /** 创建 Axios 实例 */
 const service = axios.create({
-  // baseURL: process.env.REACT_APP_API_BASE_URL || '/api',
-  baseURL: 'http://192.168.11.146:8080/api',
+  baseURL: 'http://192.168.11.146:8888/api',
+  // baseURL: baseUrl + prefix,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
