@@ -1,11 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const { merge } = require('webpack-merge');
+const commonConfig = require('./webpack.common.js');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
-module.exports = {
+module.exports = merge(commonConfig, {
   mode: 'development',
   entry: './src/index.tsx',
   output: {
+    publicPath: process.env.PUBLIC_PAHT,
     path: path.resolve(__dirname, '../dist'),
     filename: 'index.js',
   },
@@ -50,9 +54,16 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
+        test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -80,9 +91,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new ForkTsCheckerWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.html',
+      template: path.resolve(__dirname, '../public/index.html'),
+      // favicon: path.resolve(__dirname, '../public/favicon.ico'),
     }),
     new ReactRefreshWebpackPlugin(),
   ],
-};
+});

@@ -1,5 +1,6 @@
 const dotenv = require('dotenv')
 const path = require('path')
+const webpack = require('webpack')
 
 // 根据当前环境加载对应的 env 文件
 const env = dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {}
@@ -9,12 +10,13 @@ const envKeys = Object.entries(env).reduce((prev, [key, val]) => {
   prev[`process.env.${key}`] = JSON.stringify(val)
   return prev
 }, {})
-
+console.log(process.env.API_BASE_URL)
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.tsx',
   output: {
-    path: __dirname + '/dist',
-    filename: 'bundle.js',
+    path: path.resolve(__dirname, '../dist'),
+    filename: 'index.js',
+    publicPath: process.env.PUBLIC_PAHT,
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
@@ -39,12 +41,44 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        // 留给 dev / prod 单独设置 use 或 options
+        use: [], // 占位，不填 options
+      },
+      {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [], // dev/prod 单独配置 loader
+      },
+      {
+        test: /\.(png|jpe?g|gif|webp|svg)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024, // 10kb
+          },
+        },
+      },
+      {
+        test: /\.(ttf|woff2?|mp3|mp4|avi)$/i,
+        type: 'asset/resource',
       },
     ],
   },
   plugins: [
     new webpack.DefinePlugin(envKeys),
+    // new CopyWebpackPlugin({
+    //   patterns: [
+    //     {
+    //       from: path.resolve(__dirname, '../public'),
+    //       to: path.resolve(__dirname, '../dist'),
+    //       globOptions: {
+    //         ignore: ['**/index.html'], // 避免和 HtmlWebpackPlugin 冲突
+    //       },
+    //     },
+    // -----------------------------------------------------------
+    //     { from: path.resolve(__dirname, 'public/fav.png'), to: 'fav.png' }
+    //   ],
+    // }),
   ],
 };
