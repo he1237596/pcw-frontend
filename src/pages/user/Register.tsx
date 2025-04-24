@@ -3,7 +3,7 @@ import type { FormProps } from 'antd';
 import { Button, Checkbox, Form, Input, Card, Col, Flex, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
-import { login, register } from '../../api/user';
+import { login, register } from '@api/user';
 type FieldType = {
   username: string;
   password: string;

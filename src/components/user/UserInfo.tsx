@@ -12,7 +12,7 @@ import {
   Upload,
   Flex,
 } from 'antd';
-import { useUserStore } from '../../store/userUserStore';
+import { useUserStore } from '@store/userUserStore';
 
 // import UploadAvatar from './UploadAvatar';
 import { UserOutlined, LoadingOutlined } from '@ant-design/icons';

@@ -16,15 +16,15 @@ import {
   getProjectKeys,
   deleteTranslationKey,
   updateTranslationKeyByLangId,
-} from '../../api/translationKeys';
+} from '@api/translationKeys';
 import TranslationKeyForm from './TranslationKeyForm';
 import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
-import { getProjects } from '../../api/projects';
+import { getProjects } from '@api/projects';
 import { createStyles } from 'antd-style';
 import type { TableColumnsType } from 'antd';
 import dayjs from 'dayjs';
-import { useUserStore } from '../../store/userUserStore';
+import { useUserStore } from '@store/userUserStore';
 import PermissionButton from '@components/PermissionButton';
 import SearchForm from '@components/table/SearchForm';
 interface DataType {

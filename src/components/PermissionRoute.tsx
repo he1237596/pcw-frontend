@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 // import { usePermissions } from '../context/PermissionContext'; // 假设你有权限上下文
-import { useUserStore } from '../store/userUserStore';
+import { useUserStore } from '@store/userUserStore';
 
 interface PermissionRouteProps {
   element: React.ReactNode;

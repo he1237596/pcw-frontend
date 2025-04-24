@@ -8,7 +8,7 @@ import {
   Form,
   TablePaginationConfig,
 } from 'antd';
-import { getProjects, deleteProject, exportProjects } from '../../api/projects';
+import { getProjects, deleteProject, exportProjects } from '@api/projects';
 import { PlusOutlined } from '@ant-design/icons';
 // import { downloadFile } from '@utils/index';
 import ProjectForm from './ProjectForm';

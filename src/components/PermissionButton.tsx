@@ -1,7 +1,7 @@
 import React from 'react';
 // import { usePermissions } from '../context/PermissionContext';
 import { Button, ButtonProps } from 'antd'; // 使用Ant Design的Button组件
-import { useUserStore } from '../store/userUserStore';
+import { useUserStore } from '@store/userUserStore';
 
 interface PermissionButtonProps extends ButtonProps {
   permission?: string;

@@ -23,12 +23,12 @@ import Logo from '@assets/logo.png';
 import UserInfo from '@components/user/UserInfo';
 import UpdatePassword from '@components/user/UpdatePassword';
 import ThemeSetting from '@components/theme/ThemeSetting';
-import { useThemeContext } from '../context/ThemeContext';
+import { useThemeContext } from '@context/ThemeContext';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 // import { logout } from '@api/user';
 import { generate } from '@ant-design/colors';
 // import { usePermissions } from '../context/PermissionContext';
-import { useUserStore } from '../store/userUserStore';
+import { useUserStore } from '@store/userUserStore';
 
 const { Header, Content, Footer, Sider } = Layout;
 const Logout: React.FC = () => {

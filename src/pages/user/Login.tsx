@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { getUserInfo, login } from '@api/user';
-import { useUserStore } from '../../store/userUserStore';
+import { useUserStore } from '@store/userUserStore';
 type FieldType = {
   username?: string;
   password?: string;
