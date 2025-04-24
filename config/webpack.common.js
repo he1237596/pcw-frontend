@@ -1,3 +1,15 @@
+const dotenv = require('dotenv')
+const path = require('path')
+
+// 根据当前环境加载对应的 env 文件
+const env = dotenv.config({ path: `.env.${process.env.NODE_ENV}` }).parsed || {}
+
+// 将 env 对象转为 DefinePlugin 可识别格式
+const envKeys = Object.entries(env).reduce((prev, [key, val]) => {
+  prev[`process.env.${key}`] = JSON.stringify(val)
+  return prev
+}, {})
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -32,4 +44,7 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin(envKeys),
+  ],
 };

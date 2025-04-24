@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ConfigProvider, Button, theme, Space, ThemeConfig, App } from 'antd';
-import i18next from 'i18next';
-import { useTranslation } from 'react-i18next';
+// import i18next from 'i18next';
+// import { useTranslation } from 'react-i18next';
 import useToken from 'antd/es/theme/useToken';
 import { HashRouter as Router, useRoutes } from 'react-router-dom';
 import { routes } from './router';
@@ -37,7 +37,7 @@ const Index: React.FC = () => {
   const [themeData, setThemeData] =
     React.useState<Partial<ThemeConfig>>(darkTheme);
   const [themeMode, setThemeMode] = useState<ThemeMode>('dark');
-
+  // alert(process.env.REACT_APP_ENV);
   const toggleTheme = () => {
     const newMode = themeMode === 'dark' ? 'light' : 'dark';
     setThemeMode(newMode);

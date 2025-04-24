@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-console.log(path.resolve(__dirname, '../dist'));
+
 module.exports = {
   mode: 'production',
   entry: './src/index.tsx',
