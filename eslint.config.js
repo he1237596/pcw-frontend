@@ -58,3 +58,51 @@ module.exports = defineConfig({
   },
   ignores: ['node_modules/', 'build/', 'dist/', 'public/'], // 忽略的目录或文件
 });
+
+// pnpm add eslint@8.0.0 --dev
+// .eslintrc.js 
+// module.exports = {
+//   parser: '@typescript-eslint/parser', // 使用 TypeScript 解析器
+//   parserOptions: {
+//     ecmaVersion: 2020,
+//     sourceType: 'module',
+//     ecmaFeatures: {
+//       jsx: true, // 支持 JSX
+//     },
+//     project: './tsconfig.json', // 确保 ESLint 使用 tsconfig.json
+//   },
+//   extends: [
+//     'eslint:recommended',
+//     'plugin:react/recommended',
+//     'plugin:@typescript-eslint/recommended',
+//     'plugin:prettier/recommended', // 使用 Prettier 配置
+//   ],
+//   plugins: ['react', 'prettier', '@typescript-eslint'],
+//   env: {
+//     browser: true,
+//     node: true,
+//   },
+//   globals: {
+//     myGlobalVar: 'readonly', // 如果有全局声明，记得在这里配置
+//   },
+//   rules: {
+//     'prettier/prettier': [
+//       'warn',
+//       {
+//         semi: true,
+//         singleQuote: true,
+//         trailingComma: 'all',
+//         endOfLine: 'auto',
+//       },
+//     ],
+//     'no-undef': 'error', // 检查未定义的变量
+//     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+//     'react/react-in-jsx-scope': 'off', // React 17+ 以后可以不再需要这个
+//   },
+//   settings: {
+//     react: {
+//       version: 'detect', // 自动检测 React 版本
+//     },
+//   },
+//   ignorePatterns: ['node_modules/', 'build/', 'dist/'], // 忽略某些文件或目录
+// };
