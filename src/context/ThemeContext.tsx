@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { ThemeConfig } from 'antd/es/config-provider/context';
 
 export type ThemeMode = 'dark' | 'light';

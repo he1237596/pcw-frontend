@@ -3,7 +3,6 @@ import {
   GroupOutlined,
   FieldStringOutlined,
   SettingOutlined,
-  LogoutOutlined,
   SwapOutlined,
   UserOutlined,
   PoweroffOutlined,
@@ -16,7 +15,6 @@ import {
   Avatar,
   Dropdown,
   Flex,
-  Card,
   Spin,
 } from 'antd';
 import Logo from '@assets/logo.png';

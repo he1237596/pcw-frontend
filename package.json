@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development webpack serve --open --config config/webpack.dev.js",
     "build:dev": "cross-env NODE_ENV=development webpack --config config/webpack.prod.js",
     "build:prod": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
-    "lint": "eslint",
+    "lint": "tsc --noEmit && eslint --fix",
     "format": "prettier --write src/**/*.{js,ts,tsx}",
     "prepare": "husky && husky install"
   },

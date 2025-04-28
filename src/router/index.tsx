@@ -1,8 +1,8 @@
 import React from 'react';
 import { RouteObject, Navigate } from 'react-router-dom';
-import Home from '@pages/home';
-import Demo from '@pages/demo';
-import Layout from '@layouts/layout';
+// import Home from '@pages/home';
+// import Demo from '@pages/demo';
+// import Layout from '@layouts/layout';
 import SmLayout from '@layouts/SmLayout';
 import Projects from '@pages/Projects';
 import Login from '@pages/user/Login';
