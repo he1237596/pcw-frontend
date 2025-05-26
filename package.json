@@ -10,7 +10,9 @@
     "build:prod": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
     "lint": "tsc --noEmit && eslint --fix",
     "format": "prettier --write src/**/*.{js,ts,tsx}",
-    "prepare": "husky && husky install"
+    "prepare": "husky && husky install",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +34,14 @@
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/addon-interactions": "^8.6.14",
+    "@storybook/addon-onboarding": "^8.6.14",
+    "@storybook/addon-webpack5-compiler-swc": "^3.0.0",
+    "@storybook/blocks": "^8.6.14",
+    "@storybook/react": "^8.6.14",
+    "@storybook/react-webpack5": "^8.6.14",
+    "@storybook/test": "^8.6.14",
     "@types/crypto-js": "^4.2.2",
     "@types/react": "^18.3.11",
     "@types/react-dom": "^18.3.1",
@@ -48,12 +58,14 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-storybook": "^0.12.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "html-webpack-plugin": "^5.6.0",
     "husky": "^8.0.0",
     "lint-staged": "^15.2.10",
     "mini-css-extract-plugin": "^2.9.1",
     "prettier": "^3.3.3",
+    "storybook": "^8.6.14",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
@@ -65,6 +77,11 @@
     "source/project/simdeck/**/*.{js,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
     ]
   }
 }
