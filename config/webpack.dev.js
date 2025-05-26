@@ -7,7 +7,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
 module.exports = merge(commonConfig, {
   mode: 'development',
-  entry: './src/index.tsx',
   output: {
     publicPath: process.env.PUBLIC_PAHT,
     path: path.resolve(__dirname, '../dist'),

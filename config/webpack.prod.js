@@ -10,7 +10,6 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = merge(commonConfig, {
   mode: 'production',
-  entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: 'js/[name].[contenthash:8].js',
