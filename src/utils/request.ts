@@ -11,6 +11,9 @@ import {
   handleGeneralError,
   handleAuthError,
 } from '@utils/requestTools';
+export interface CustomRequestConfig extends AxiosRequestConfig {
+  silent?: boolean;
+}
 interface ListData {
   list: any[];
   total: number;
@@ -31,7 +34,28 @@ const getRequestKey = (config: AxiosRequestConfig): string => {
   const { method, url, params, data } = config;
   return `${method}-${url}-${JSON.stringify(params)}-${JSON.stringify(data)}`;
 };
-
+const codeHandlers: Record<number, (msg: string) => void> = {
+  401: (msg) => {
+    message.error(msg);
+    window.location.href = '/#/user/login';
+  },
+  402: (msg) => {
+    message.error(msg);
+    window.location.href = '/#/user/login';
+  },
+  403: (msg) => {
+    message.error(msg);
+  },
+  404: (msg) => {
+    message.error(msg);
+  },
+  429: (msg) => {
+    message.error(msg);
+  },
+  500: (_msg) => {
+    message.error('服务器错误');
+  },
+};
 // const baseUrl = process?.env?.REACT_APP_API_BASE_URL
 // const prefix = '/api'
 
@@ -91,38 +115,8 @@ service.interceptors.response.use(
     const { code, msg } = response.data || {};
     // handleGeneralError(response.data.errno, response.data.errmsg)
     // handleAuthError(response.data.errno)
-
-    if (code === 401) {
-      // message.warning('未授权，请登录');
-      message.error(msg);
-      window.location.href = '/#/user/login';
-      return response;
-    }
-    if (code === 402) {
-      // message.error('授权过期，请重新登录');
-      message.error(msg);
-      window.location.href = '/#/user/login';
-      return response;
-    }
-    if (code === 403) {
-      // message.warning('无权限访问');
-      message.error(msg);
-      return response;
-    }
-    if (code === 404) {
-      // message.warning('无权限访问');
-      message.error(msg);
-      return response;
-    }
-    if (code === 500) {
-      message.error('服务器错误');
-      // message.error(msg);
-      return response;
-    }
-    if (code === 429) {
-      // message.error('服务器错误');
-      message.error(msg);
-      return response;
+    if (code && codeHandlers[code]) {
+      codeHandlers[code](msg);
     }
     return response; // ✅
   },
@@ -134,31 +128,43 @@ service.interceptors.response.use(
     }
 
     if (isAxiosError(error)) {
-      const status = error.response?.status;
-      switch (status) {
-        // case 401:
-        //   message.error('未授权，请登录')
-        // //   // 这里可以触发退出逻辑
-        // //   break
-        // case 402:
-        //   message.error('授权过期，请重新登录')
-        //   // // 这里可以触发退出逻辑
-        //   const navigate = useNavigate();
-        //   navigate('/user/login', { replace: true })
-        //   break
-        // case 403:
-        //   message.error('无权限访问')
-        //   break
-        case 429:
-          message.error('请求过于频繁，请稍后再试');
-        case 500:
-          message.error('服务器错误');
-          break;
-        default:
-          console.log('请求失败，状态码:', status, '信息：', error.message);
-          message.error(error.message);
-        // message.error(error.response?.data?.message || '请求失败')
-      }
+      // const status = error.response?.status;
+      // switch (status) {
+      //   // case 401:
+      //   //   message.error('未授权，请登录')
+      //   // //   // 这里可以触发退出逻辑
+      //   // //   break
+      //   // case 402:
+      //   //   message.error('授权过期，请重新登录')
+      //   //   // // 这里可以触发退出逻辑
+      //   //   const navigate = useNavigate();
+      //   //   navigate('/user/login', { replace: true })
+      //   //   break
+      //   // case 403:
+      //   //   message.error('无权限访问')
+      //   //   break
+      //   case 429:
+      //     message.error('请求过于频繁，请稍后再试');
+      //   case 500:
+      //     message.error('服务器错误');
+      //     break;
+      //   default:
+      //     console.log('请求失败，状态码:', status, '信息：', error.message);
+      //     message.error(error.message);
+      //   // message.error(error.response?.data?.message || '请求失败')
+      // }
+      const msg =
+        status &&
+        {
+          400: '请求错误',
+          401: '未授权，请重新登录',
+          403: '拒绝访问',
+          404: '接口不存在',
+          500: '服务器内部错误',
+          502: '网关错误',
+          504: '网关超时',
+        }[status];
+      message.error(msg || error.message);
     } else {
       // message.error('请求失败')
     }
@@ -171,7 +177,7 @@ const request = {
   get<T = any>(
     url: string,
     params?: object,
-    config?: AxiosRequestConfig,
+    config?: CustomRequestConfig,
   ): Promise<ApiResponse<T>> {
     // return service.get<ApiResponse<T>>(url, { params, ...config }).then((res) => res.data);
     return new Promise((resolve, reject) => {
@@ -197,7 +203,7 @@ const request = {
   post<T = any>(
     url: string,
     data?: object,
-    config?: AxiosRequestConfig,
+    config?: CustomRequestConfig,
   ): Promise<ApiResponse<T>> {
     // return service.post<ApiResponse<T>>(url, data, config).then((res) => res.data);
     return new Promise((resolve, reject) => {
@@ -218,7 +224,7 @@ const request = {
   put<T = any>(
     url: string,
     data?: object,
-    config?: AxiosRequestConfig,
+    config?: CustomRequestConfig,
   ): Promise<ApiResponse<T>> {
     // return service.put<ApiResponse<T>>(url, data, config).then((res) => res.data);
     return new Promise((resolve, reject) => {
@@ -239,7 +245,7 @@ const request = {
   delete<T = any>(
     url: string,
     params?: object,
-    config?: AxiosRequestConfig,
+    config?: CustomRequestConfig,
   ): Promise<ApiResponse<T>> {
     // return service.delete<ApiResponse<T>>(url, { params, ...config }).then((res) => res.data);
     return new Promise((resolve, reject) => {

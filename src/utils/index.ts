@@ -1,4 +1,4 @@
-export { default as request } from '@api/request';
+export { default as request } from './request';
 export function downloadFile(url: string, filename: string) {
   const link = document.createElement('a');
   link.href = url;
